@@ -1,0 +1,37 @@
+<table class="bom-table">
+  <thead>
+    <tr>
+      <th>Board Reference</th>
+      <th>Part</th>
+      <th>Quantity</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for component in include.bom.components %}
+    <tr class="component {{ component.type }}">
+      <td>
+        {% for reference in component.board_reference %}
+        {{ reference }}{% if forloop.last == false %}, {% endif %}
+        {% endfor %}
+      </td>
+      <td>
+        {% if component.generic_part == 'resistor' %}
+          {% assign component_label = 'Resistor, ' | append: component.data.value | append: component.data.units | append: 'Ω' %}
+          {% if component.data.tolerance %}
+            {% assign component_label = component_label | append: ', ' | append: component.data.tolerance | append: '%' %}
+          {% endif %}
+        {% elsif component.generic_part == 'capacitor' %}
+          {% assign component_label = 'Capacitor, ' | append: component.data.value | append: component.data.units | append: 'F' %}
+        {% elsif component.generic_part == 'transistor' %}
+          {% assign component_label = 'Transistor, ' | append: component.part  %}
+        {% else %}
+          {% assign component_label = component.part  %}
+        {% endif %}
+
+        {% include component.html component=component label=component_label %}
+      </td>
+      <td>{{ component.quantity }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
