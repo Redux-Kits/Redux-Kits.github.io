@@ -8,7 +8,7 @@
   </thead>
   <tbody>
     {% for component in include.bom.components %}
-    <tr class="component {{ component.type }}">
+    <tr class="component {{ component.generic_part }}" data-component='{{ component | jsonify }}'>
       <td>
         {% for reference in component.board_reference %}
         {{ reference }}{% if forloop.last == false %}, {% endif %}
@@ -28,7 +28,7 @@
           {% assign component_label = component.part  %}
         {% endif %}
 
-        {% include component.html component=component label=component_label %}
+        {{ component_label }}
       </td>
       <td>{{ component.quantity }}</td>
     </tr>
