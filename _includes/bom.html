@@ -1,9 +1,21 @@
+
+
+<div id="board-vector-locations" style="display: none;"
+{% for graphic in include.bom.graphics %}
+
+data-vector-endpoint-{{forloop.index}}="{{ site.baseurl }}/boardvectors/{{ graphic }}"
+{% endfor %}
+></div>
+
+<div id="components" style="display: none;" data-components='{{ include.bom.components | jsonify }}'></div>
+
 <table class="bom-table">
   <thead>
     <tr>
       <th>Board Reference</th>
       <th>Part</th>
       <th>Quantity</th>
+      <th>Check List</th>
     </tr>
   </thead>
   <tbody>
@@ -31,6 +43,12 @@
         {{ component_label }}
       </td>
       <td>{{ component.quantity }}</td>
+      <td style="text-align: center;">
+        <label class="custom-checkbox">
+          <input type="checkbox">
+          <span class="checkmark"></span>
+        </label>
+      </td>
     </tr>
     {% endfor %}
   </tbody>
