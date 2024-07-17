@@ -435,7 +435,6 @@ function setupTutorialBOMTable() {
     tutorialBOMRefs = document.querySelectorAll("td.bom-reference");
     tutorialBOMRefs.forEach((node) => {
         ref = node.getAttribute("data-board-reference");
-        console.log(node, ref);
         const component = componentObject.find((obj) => obj.board_reference.includes(ref));
         if (component) {
             let myString = "";
@@ -461,7 +460,7 @@ function setupTutorialBOMTable() {
             }
             node.innerHTML = myString;
         } else {
-            console.log("Component not found for ref:", ref);
+            console.error("Component not found for ref:", ref);
         }
     });
 }

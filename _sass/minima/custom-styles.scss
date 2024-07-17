@@ -15,6 +15,21 @@
     
 }
 
+.tutorial-bom-references{
+  width:100%;
+}
+
+.tutorial-step-graphic, .tutorial-complete-graphic{
+  display: flex;
+  justify-content: center; /* Centers children horizontally */
+  width: 100%;
+  svg {
+    width: 100%;
+    height: auto; /* Maintain aspect ratio */
+    max-width: 100%; /* Ensure it doesn't exceed the container's width */
+  }
+}
+
 button {
   background-color: $background-color;
   border: 2px solid $text-color;
