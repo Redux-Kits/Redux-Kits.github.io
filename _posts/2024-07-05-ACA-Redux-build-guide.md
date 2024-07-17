@@ -211,7 +211,7 @@ bom:
       data: {}
 ---
 
-
+<!-- Reference: https://guides.diyaudio.com/Guide/ACA+Redux/22 -->
 
 <!-- Introduction text -->
 
@@ -255,128 +255,48 @@ P1 is keyed and cannot be inserted backwards. Solder the C3 and C4 capacitors wi
 
 {% include graphics_for_step.html bom_references="'P1', 'C3', 'C4'" %}
 
-<!-- 
-## Step 26: Small Signal Transistors
+<!-- Small Signal Transistors -->
+{% include step.html title="Small Signal Transistors" bom_references="'Q3', 'Q4'" %}
 
-As shown in photo 1, the ZTX450 is just a bit bigger than the 2SK370.  
-Note that the outline on the PCB is drawn in a way to look like the shape of the transistors, both of these are directional.  
-The slightly longer/bigger face of the transistor is called the flat, align it with the slightly longer side of the outline drawn on the PCB.
+Q3 is slightly bigger than Q4. Both Q3 and Q4 are directional. The outline of each transistor is drawn on the PCB - the slightly longer/bigger face of the transistor is called the 'flat' and you should align it with the longer side of the outline on the PCB.
 
-## Step 27: Soldering Small Transistors
+{% include graphics_for_step.html bom_references="'Q3', 'Q4'" %}
 
-Slightly bend the leads and solder.  
-The transistors have 3 solder pads each, the capacitors have 2.  
-It is very important that the solder doesn't connect to other pads on the bottom... this is called a solder bridge and is bad.  
-The pads between the capacitor legs are a bit tight, be careful.
+<!-- 1000uf Capacitors -->
+{% include step.html title="Small Signal Transistors" bom_references="'C1', 'C2'" %}
 
-## Step 28: 1000uF Capacitors
+The leads of C1 & C2 need to be bent down prior to installation. Use a long screw as a bending guide to ensure the bend does not occur too close to the packaging. Before making the bend, note of the direction of the capacitor. The long leg should go in the + hole and the capacitors should lie on the PCB outlines.
 
-The leads of the 1000uF capacitors need to be bent down before installation.  
-Use one of the long screws as a bending guide.  
-Hold the capacitor as shown, with the negative marking towards you, and bend leads down 90deg.  
-The caps should look like Photo 2 before installation.  
-Double-check your polarity, install and solder.
+{% include graphics_for_step.html bom_references="'C1', 'C2'" %}
 
-## Step 29: Power Switch
+<!-- Power Switch -->
+{% include step.html title="Power Switch" bom_references="'SW1'" %}
 
-Make sure the switch is flat and square on the PCB before soldering.  
-The round cap (not shown) is press fit on the switch.
+Make sure the switch is flat against the PCB before soldering. A round cap is provided to attach to the button.
 
-## Step 30: DC Power Jack
+{% include graphics_for_step.html bom_references="'SW1'" %}
 
-Make sure the DC power jack is flat and square on the PCB before soldering.  
-Photo 2 - As you can see, the solder tabs are a little short. It will still solder nicely with a bit of care.
+<!-- DC Jack -->
+{% include step.html title="DC Power" bom_references="'J1'" %}
 
-## Step 31: RCA Jack
+Make sure the DC Power Jack is flat against the PCB before soldering. 
 
-Like all the rest of the PCB mount jacks, ensure the RCA jack is flat and square to the PCB before soldering.  
-It may take a bit of effort to push it flat. That's ok, as flat and square to the PCB is the goal.
+{% include graphics_for_step.html bom_references="'J1'" %}
 
-## Step 32: Speaker Posts
+<!-- RCA Jack -->
+{% include step.html title="RCA Jack" bom_references="'J2'" %}
 
-Solder the binding posts to the screw terminals before adding them to the PCB. This takes patience! Use a larger solder tip if you have one.  
-Align the holes in the binding post to be vertical when installed.  
-Some binding posts run out of threads when they're screwed all the way in. Adding the included split washer between the parts will help the threads stay engaged and hold alignment while soldering.  
-This will be easier if you remove the nut portion of the assembly, there will be less thermal mass to heat for effective soldering.
+Again, make sure the RCA Jack is flat against the PCB before soldering. It may take some effort to push the RCA Jack into the PCB.
 
-## Step 33: One PCB Side Complete!
+{% include graphics_for_step.html bom_references="'J2'" %}
 
-At this point the PCB should look like this.  
-Photos for reference.
+<!-- Speaker Posts -->
+{% include step.html title="Speaker Posts" bom_references="'J3', 'J4" %}
 
-## Step 34: The Other Side
+Solder the binding posts to the screw terminal before adding them to the PCB. This takes patience and heat - use a larger soldering tip if possible. Align the holes in the binding post to be vertical when installed. Some binding posts run out of threads when they're screwed all the way in. Adding the included split washer between the parts will help the threads stay engaged and hold alignment while soldering. This will be easier if you remove the nut portion of the assembly, there will be less thermal mass to heat for effective soldering.
 
-Getting close to completely stuffing the PCB.  
-There are a couple things to stuff on the other side, these will point 'up' during normal operation.  
-Please find the pads for the LEDs.
+{% include graphics_for_step.html bom_references="'J3', 'J4" %}
 
-## Step 35: LEDs
+{% include step.html title="One PCB Side Complete!"  %}
 
-Insert the long leg of the LED into the + hole.  
-Flip the PCB and solder as normal.  
-Photo 3 for reference.  
-If you don’t like the color-changing LEDs, you may substitute solid color LEDs of your choice or leave them out entirely.
-
-## Step 36: Brass Standoffs
-
-Screw the 4 brass standoffs into the outermost holes along the heatsink.
-
-## Step 37: Bending the Transistor Legs
-
-The transistor legs need to be bent up 90deg towards the plastic side of the body right at the point they narrow.  
-Bending can be done with pliers, but the leads naturally bend at the correct point even when done by hand.
-
-## Step 38: Insulating and Securing Transistors
-
-Photo 1 - Insulator pads install here. Make sure they are clean and free of any metal crumbs or little solder blobs.  
-Photo 2 - Attach the transistors to the heatsink with the screw and washer.  
-Do NOT tighten the screws beyond what will hold them in place loosely. They still need to move a little at this point.  
-Make sure the insulator pad is square with the transistor and 100% of the transistor is resting on the pad.  
-The heatsink and PCB assembly go together so the flat bits are aligned. It does not matter which of the large transistors is used as Q1 or Q2; they are identical and symmetrical at this point.
-
-## Step 39: Alignment of Transistors to PCB
-
-Before the PCB goes on, make sure:
-
--   The (4) brass standoffs are inserted and secure
--   The big transistors have the blue insulators aligned nice and square under them and none of the transistor body is touching the metal itself
--   That the screw and washer holding the transistors are attached but not tight yet
--   Make sure the 3 pins per transistor are in their holes
-
-## Step 40: Attaching PCB to Heatsink
-
-Make sure all the transistor legs are in the holes, then:
-
--   Gently wiggle the PCB and get the mounting holes over the brass standoffs
--   Insert and attach the (4) black 'legs' into the brass standoffs and get everything squared up and snug  
-    Photo 2 - Look under the PCB and make sure there are no uncut leads. The only things visible from the bottom should be the power transistors, the brass standoffs, and the LEDs.
-
-## Step 41: Attaching PCB to Heatsink, continued
-
-With the PCB attached with all four legs attached,  
-NOW you tighten the power transistor screws - firm, but not super tight. You want them to be attached fairly firmly, but don't break or bend anything.  
-And FINALLY, after the PCB is lined up, attached, and the transistors are tightened, you solder both power transistors to the PCB.
-
-## Step 42:
-
-It looks like a mechanical hedgehog.  
-DC balance set to 12V.
-
-## Step 43: VIDEO - Setting DC Balance
-
-A short video to show setting DC balance.  
-Be patient. Go slow. Enjoy the process.
-
-## Step 44: Connections to Input, Power, Speakers
-
-PSU attaches to the black barrel jack.  
-Input to the RCA jack.  
-Speaker wires attach to the binding posts.
-
-## Step 45: Sign Your Work
-
-Make sure you sign your name to your new amplifiers when you complete them in the provided label space.
-
-## Step 46: If You Need a PCB Holder
-
-This works nicely. Be very gentle with it in this configuration; it's delicate and easy broken. But it sure is handy at times. -->
+Wait for Nelson to generate a SVG of the bottom of the board. 

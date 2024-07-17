@@ -394,13 +394,13 @@ function addHighlightBeneathLayersForCurrentStep(layers, stepReferencesArray, sv
 
             // Create a new rect element
             const highlight = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-            highlight.setAttribute("x", layerBBox.x - 1);
-            highlight.setAttribute("y", layerBBox.y - 1);
-            highlight.setAttribute("width", layerBBox.width + 2);
-            highlight.setAttribute("height", layerBBox.height + 2);
+            highlight.setAttribute("x", layerBBox.x - 4);
+            highlight.setAttribute("y", layerBBox.y - 4);
+            highlight.setAttribute("width", layerBBox.width + 8);
+            highlight.setAttribute("height", layerBBox.height + 8);
             highlight.setAttribute("fill", "none");
             highlight.setAttribute("stroke", "red");
-            highlight.setAttribute("stroke-width", "0.2");
+            highlight.setAttribute("stroke-width", "1");
 
             // Insert the highlight rect before the layer to ensure it's beneath it
             svgElement.insertBefore(highlight, layer);
@@ -451,6 +451,9 @@ function setupTutorialBOMTable() {
                     break;
                 case "transistor":
                     myString = `Transistor, ${component.part}`;
+                    if (component.data.model) {
+                        myString += `, ${component.data.model}`;
+                    }
                     break;
                 default:
                     myString = component.part;
