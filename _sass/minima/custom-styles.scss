@@ -15,6 +15,14 @@
     
 }
 
+button {
+  background-color: $background-color;
+  border: 2px solid $text-color;
+  color: $text-color;
+  padding: 10px;
+}
+
+
 .custom-checkbox {
     position: relative;
     display: inline-block;

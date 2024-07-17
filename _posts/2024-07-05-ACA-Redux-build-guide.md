@@ -211,138 +211,51 @@ bom:
       data: {}
 ---
 
-This is the build guide for the ACA Redux
+
+
+<!-- Introduction text -->
+
+This is the build guide for the ACA Redux. Please read through this guide once or twice before building your amplifier Before the build check off each item on the bill of materials (BOM) to make sure that nothing is missing from the kit. If there are missing parts please [send me a message](https://reduxkits.com/pages/contact)!
+
+<!-- To draw all SVG graphics: -->
+
+{% include board_graphics.html bom=page.bom %}
 
 ## BOM
 
+<!-- BOM Table -->
+
 {% include bom.html bom=page.bom %}
 
-{% include step.html title="RTFM" bom_references="J3,R1" %}
+<!-- A step heading, with the associated BOM components that should be shown -->
+<!-- You do not need to number steps, it will be automatic -->
+{% include step.html title="Small Resistors" bom_references="'R5', 'R6', 'R7', 'R8', 'R9', 'R10', 'R11', 'R12', 'R13', 'R14', 'R15', 'R16'" %}
 
-Please read through this guide once or twice before building your amplifiers.  
-You can click into each photo if you need to see it full size.
+You can solder the resistors one by one, or do them all at once.
+Note R16 is not grouped with the other resistors.
 
-## Step 3: Kit Contents
+<!-- Step graphics are populated from the BOM -->
+{% include graphics_for_step.html bom_references="'R5', 'R6', 'R7', 'R8', 'R9', 'R10', 'R11', 'R12', 'R13', 'R14', 'R15', 'R16'" %}
 
-All the pieces you need are included.  
-All the pieces you need are included.
 
-## Step 4: Kit Contents continued, Hardware
+<!-- Large Resistor Step -->
+{% include step.html title="Large Resistors" bom_references="'R1', 'R2', 'R3', 'R4'"%}
+Solder the large resistors.
 
-Starting with the hardware,  
-Photo 2 - M3 x10 for the power transistors.  
-Photo 3 - M3 brass standoffs, these go between the heatsink and the PCB.
+{% include graphics_for_step.html bom_references="'R1', 'R2', 'R3', 'R4'" %}
 
-## Step 5: Kit Contents continued, Hardware 2
+The large resistors get warm during operation. Some space off the PCB will help airflow. You can use the brass standoff to gauge the space under the large resistors. It helps to solder one leg from this side before flipping the PCB over.
 
-Photo 1 - M3 plastic standoffs, these are the 'legs' the amplifier stands on.  
-Photo 2 - PC mount M4 screw terminals, used for the speaker posts AND to bend the leads of the small resistors.  
-Photo 3 - M3 washers for securing the power transistors.
+![Large Resistors & Brass Standoff]({{ site.url }}/images/aca-redux-large-resistors-brass-standoff.jpeg)
 
-## Step 6: Kit Contents continued, PCB overview
+<!-- Pots and 10uF Caps -->
+{% include step.html title="Potentionmeter & Small Caps" bom_references="'P1', 'C3', 'C4'" %}
 
-Here you can see the top and bottom of the PCB.  
-Almost all components are mounted on the side showing the component values. This side will be hanging down in normal operation.  
-The side with the drawing of the Amp Camp Camper will mount only the LEDs, as they need to shine up through the pins of the heatsink. Neat!
+P1 is keyed and cannot be inserted backwards. Solder the C3 and C4 capacitors with the long leg in the + hole.
 
-## Step 7: Kit Contents continued, Heatsink
+{% include graphics_for_step.html bom_references="'P1', 'C3', 'C4'" %}
 
-This heatsink was actually designed for a very large/bright LED lamp.  
-The PCB was designed to take advantage of the existing holes in the heatsink, requiring no drilling by the builder. A very smart design.
-
-## Step 8: PCB and Heatsink Alignment
-
-Notice that the PCB and the heatsink have 2 cut-off or flat edges. This will be more important later, but this is a good photo showing it.  
-When it is assembled, these flat bits must be aligned.
-
-## Step 9: Kit Contents continued, Components
-
-Photo 1 - Power switch and potentiometer.  
-Photo 2 - Speaker jacks. The nuts, washers, and solder terminals will not be used.  
-Photo 3 - DC power jacks and RCA (signal) jacks.
-
-## Step 10: Kit Contents continued, Power Supply
-
-Included with the kit is a pair of 24V 2.5A DC power supplies. One for each channel.  
-These PSU are universal input and have an IEC C14 inlet plug. Users in different countries need only to find suitable AC mains cords.
-
-## Step 11: Kit Contents continued, Power Transistors
-
-The TO-247 package power transistors are all the same, no matching or sorting required. Each amplifier will use 2.
-
-## Step 12: 2SK370 JFET
-
-The smaller and more angular of the small-signal transistors is the 2SK370 N-channel JFET.  
-This is used in position Q4.
-
-## Step 13: ZTX450 Transistor
-
-The slightly larger and smoother small-signal transistor is the ZTX450 N-channel BJT (Bipolar Junction Transistor).  
-This is used in position Q3.
-
-## Step 14: Capacitors
-
-Included are (8) 1000uF capacitors. These are the larger caps, and used in positions C1 (3 per amp) and C2. (1 per amp)  
-The smaller capacitors are 10uF, used in positions C3, C4.  
-Capacitors have a plus and a minus and are directional! The can has the - side labeled, and the longer leg is +.
-
-## Step 15: Kit Contents continued, Resistors
-
-Resistors are packaged as shown.  
-There are extra 2.2K and 10K resistors. These are for R13 and R16. They set the brightness of the LEDs. 2.2K is brighter than 10K.  
-Please note that the resistor values are not labeled in the kit. This is a step for you to do later.
-
-## Step 16: Kit Contents continued, LED, Insulator Pads
-
-The blue insulator pads go in-between the power transistors and heatsink.  
-LEDs are used for power indication as well as illuminating the heatsinks.
-
-## Step 17: Resistor Reference
-
-Resistor color codes.
-
-## Step 18: Measure and Label Resistors
-
-Measure all your resistors and label the tape.  
-The large resistors are very low ohms, and most multimeters will have a problem accurately measuring them. Refer to the reference and stripe codes.
-
-## Step 19: Resistor Lead Bending
-
-The solder terminals that will be used for the speaker posts will be used as a tool to bend the leads of the small resistors.  
-If you use this, the small resistors will be bent perfectly to the solder pads.
-
-## Step 20: Bending Small Resistor Leads
-
-Bend small resistor leads as shown.
-
-## Step 21: Stuffing Resistors
-
-Take a resistor with the leads bent and insert it into its set of solder pads.  
-Make sure the resistor sits flat, and with the slightly thicker brown stripe to the right.  
-Neatness counts.  
-Flip the PCB and slightly bend the leads outwards so the resistor stays in place.
-
-## Step 22: Stuffing Resistors
-
-You can solder the resistors one-by-one, or do them all at once.  
-Once properly soldered, trim the leads.
-
-## Step 23: Resistors
-
-A photo of all the small resistors stuffed on the PCB.  
-Don't forget R16, it isn't grouped with the other resistors. (top left in this photo)
-
-## Step 24: Large Resistors
-
-The large resistors get warmer than the small and some space off the PCB will help with airflow.  
-You can use the brass standoff to gauge the space under the large resistors.  
-It helps to solder one leg from this side before flipping the PCB over... :)
-
-## Step 25: Potentiometer, Small Capacitors
-
-Potentiometer is keyed and cannot be inserted backwards. Install and solder at this time.  
-The 10uF caps can be installed and soldered at this time. Remember, long leg in the + hole.
-
+<!-- 
 ## Step 26: Small Signal Transistors
 
 As shown in photo 1, the ZTX450 is just a bit bigger than the 2SK370.  
@@ -466,4 +379,4 @@ Make sure you sign your name to your new amplifiers when you complete them in th
 
 ## Step 46: If You Need a PCB Holder
 
-This works nicely. Be very gentle with it in this configuration; it's delicate and easy broken. But it sure is handy at times.
+This works nicely. Be very gentle with it in this configuration; it's delicate and easy broken. But it sure is handy at times. -->

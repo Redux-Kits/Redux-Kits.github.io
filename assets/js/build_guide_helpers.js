@@ -2,6 +2,7 @@ var SVGs = [];
 var componentObject;
 var boardReferenceMasterList = [];
 var forcedReflows = [];
+var tutorialStepVisibleLayers = [];
 
 function loadBoardReferenceMasterList() {
     for (let component of componentObject) {
@@ -58,11 +59,10 @@ function getTooltipLayerDiv(layerId) {
             let layer = findLayer(layers, lID);
             hideAllReferencedLayers(layers);
             hideAllAltReferencedLayers(layers);
-            console.log(lID, typeof(lID))
 
             if (layer) {
                 layer.style.display = "block";
-                if (lID.includes("Alt")){
+                if (lID.includes("Alt")) {
                     cropSVGElement(svgElement, layer);
                 } else {
                     prettyCropSVGElement(svgElement, layer, 6);
@@ -76,11 +76,27 @@ function getTooltipLayerDiv(layerId) {
     return divs;
 }
 
-function makeDivWithSVGElement(svgElement) {
+function makeDivWithSVGElement(svgElement, minDimension = 200) {
     const div = document.createElement("div");
     div.style.padding = "0";
     div.style.margin = "0";
     div.style.overflow = "hidden";
+    const viewBox = svgElement.viewBox.baseVal;
+    const aspectRatio = viewBox.width / viewBox.height;
+
+    if (minDimension != -1) {
+        let newWidth = minDimension;
+        let newHeight = minDimension / aspectRatio;
+
+        if (newHeight < minDimension) {
+            newHeight = minDimension;
+            newWidth = minDimension * aspectRatio;
+        }
+
+        svgElement.setAttribute("width", newWidth);
+        svgElement.setAttribute("height", newHeight);
+    }
+
     div.innerHTML = new XMLSerializer().serializeToString(svgElement);
     return div;
 }
@@ -359,6 +375,139 @@ function positionTooltip(event, tooltip) {
     tooltip.style.top = `${spanRect.bottom + window.scrollY + 5}px`;
 }
 
+function showPopulatedLayersAtStep(layers) {
+    for (let i = 0; i < layers.length; i++) {
+        const currentLabel = layers[i].getAttribute("inkscape:label");
+        if (currentLabel) {
+            if (tutorialStepVisibleLayers.includes(currentLabel)) {
+                layers[i].style.display = "block";
+            }
+        }
+    }
+}
+
+function addHighlightBeneathLayersForCurrentStep(layers, stepReferencesArray, svgElement) {
+    for (let id of stepReferencesArray) {
+        const layer = findLayer(layers, id);
+        if (layer) {
+            const layerBBox = getBbox(layer);
+
+            // Create a new rect element
+            const highlight = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            highlight.setAttribute("x", layerBBox.x - 1);
+            highlight.setAttribute("y", layerBBox.y - 1);
+            highlight.setAttribute("width", layerBBox.width + 2);
+            highlight.setAttribute("height", layerBBox.height + 2);
+            highlight.setAttribute("fill", "none");
+            highlight.setAttribute("stroke", "red");
+            highlight.setAttribute("stroke-width", "0.2");
+
+            // Insert the highlight rect before the layer to ensure it's beneath it
+            svgElement.insertBefore(highlight, layer);
+        }
+    }
+}
+
+function setupTutorialBOMTable() {
+    const bomContainers = document.querySelectorAll(".tutorial-bom-references-container");
+
+    bomContainers.forEach((container) => {
+        // Create expand/collapse button
+        const button = document.createElement("button");
+        button.textContent = "+ Show Components";
+        button.style.marginBottom = "10px";
+        button.addEventListener("click", () => {
+            if (container.style.display === "none") {
+                container.style.display = "block";
+                button.textContent = "- Hide Components";
+            } else {
+                container.style.display = "none";
+                button.textContent = "+ Show Components";
+            }
+        });
+
+        // Insert the button before the container
+        container.parentNode.insertBefore(button, container);
+
+        // Set container to be collapsed initially
+        container.style.display = "none";
+    });
+    tutorialBOMRefs = document.querySelectorAll("td.bom-reference");
+    tutorialBOMRefs.forEach((node) => {
+        ref = node.getAttribute("data-board-reference");
+        console.log(node, ref);
+        const component = componentObject.find((obj) => obj.board_reference.includes(ref));
+        if (component) {
+            let myString = "";
+            switch (component.generic_part) {
+                case "resistor":
+                    myString = `${component.part}, ${component.data.value}${component.data.units}Ω`;
+                    if (component.data.tolerance) {
+                        myString += `, ${component.data.tolerance}%`;
+                    }
+                    break;
+                case "capacitor":
+                    myString = `${component.part}, ${component.data.value}${component.data.units}F`;
+                    break;
+                case "transistor":
+                    myString = `Transistor, ${component.part}`;
+                    break;
+                default:
+                    myString = component.part;
+                    break;
+            }
+            node.innerHTML = myString;
+        } else {
+            console.log("Component not found for ref:", ref);
+        }
+    });
+}
+
+function drawStepGraphics(node) {
+    const stepReferencesArray = node
+        .getAttribute("data-bom-references")
+        .replace(/'/g, "")
+        .split(",")
+        .map((str) => str.trim());
+    var newComponents = stepReferencesArray.length != 0;
+    tutorialStepVisibleLayers = tutorialStepVisibleLayers.concat(stepReferencesArray);
+    if (newComponents) {
+        for (let svgString of SVGs) {
+            const parser = new DOMParser();
+            const svgDoc = parser.parseFromString(svgString, "image/svg+xml");
+            const svgElement = svgDoc.documentElement;
+            svgElement.style.padding = "0";
+            svgElement.style.margin = "0";
+            svgElement.style.border = "none";
+            forceReflow(svgElement);
+
+            // Use getElementsByTagNameNS to handle namespaces
+            const layers = svgElement.getElementsByTagNameNS("*", "g");
+            hideAllReferencedLayers(layers);
+            hideAllAltReferencedLayers(layers);
+            showPopulatedLayersAtStep(layers);
+            addHighlightBeneathLayersForCurrentStep(layers, stepReferencesArray, svgElement);
+            const div = makeDivWithSVGElement(svgElement, -1);
+            node.appendChild(div);
+            cleanUpReflows();
+        }
+    }
+}
+
+function buildStepComponents() {
+    const tutorialStepTitles = document.querySelectorAll(".tutorial-step-title");
+    let step_count = 1;
+
+    for (let node of tutorialStepTitles) {
+        node.innerHTML = `${step_count}. ${node.innerHTML}`;
+        step_count++;
+    }
+    const tutorialStepGraphics = document.querySelectorAll(".tutorial-step-graphic");
+    for (let node of tutorialStepGraphics) {
+        drawStepGraphics(node);
+    }
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     getComponentObject()
         .then(() => {
@@ -372,5 +521,7 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .finally(() => {
             wrapTextNodes();
+            buildStepComponents();
+            setupTutorialBOMTable();
         });
 });

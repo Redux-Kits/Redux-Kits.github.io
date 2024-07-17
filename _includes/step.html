@@ -1,1 +1,22 @@
-<h2 class="step" data-bom-references='{{ include.bom_references }}'>{{ include.title }}</h2>
+<h2 class="tutorial-step-title">{{ include.title }}</h2>
+{% if include.bom_references %} {% assign cleaned_references = include.bom_references | replace: "'", "" | replace: ",",
+"" %} {% assign references_array = cleaned_references | split: " " %}
+<div class="tutorial-bom-references-container">
+    <table class="tutorial-bom-references">
+        <thead>
+            <tr>
+                <th>Board Reference</th>
+                <th>Part</th>
+            </tr>
+        </thead>
+
+        {% for ref in references_array %}
+        <tr>
+            <td>{{ ref }}</td>
+            <td class="bom-reference" data-board-reference="{{ref}}"></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+{% endif %}
