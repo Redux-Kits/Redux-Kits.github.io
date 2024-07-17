@@ -1,6 +1,7 @@
 var SVGs = [];
 var componentObject;
 var boardReferenceMasterList = [];
+var forcedReflows = [];
 
 function loadBoardReferenceMasterList() {
     for (let component of componentObject) {
@@ -40,7 +41,8 @@ function getSVGPaths() {
 
 // boardReferenceMasterList
 
-function getLayerDiv(layerId) {
+function getTooltipLayerDiv(layerId) {
+    const divs = [];
     for (let svgString of SVGs) {
         const parser = new DOMParser();
         const svgDoc = parser.parseFromString(svgString, "image/svg+xml");
@@ -51,55 +53,172 @@ function getLayerDiv(layerId) {
 
         // Use getElementsByTagNameNS to handle namespaces
         const layers = svgElement.getElementsByTagNameNS("*", "g");
-        let layer = null;
 
-        for (let i = 0; i < layers.length; i++) {
-            const currentLabel = layers[i].getAttribute("inkscape:label");
-            if (currentLabel) {
-                if (
-                    (currentLabel != layerId && boardReferenceMasterList.includes(currentLabel)) ||
-                    currentLabel.includes(" Alt")
-                ) {
-                    layers[i].style.display = "none";
+        for (let lID of [layerId, layerId + " Alt"]) {
+            let layer = findLayer(layers, lID);
+            hideAllReferencedLayers(layers);
+            hideAllAltReferencedLayers(layers);
+            console.log(lID, typeof(lID))
+
+            if (layer) {
+                layer.style.display = "block";
+                if (lID.includes("Alt")){
+                    cropSVGElement(svgElement, layer);
                 } else {
-                    layers[i].style.display = "block";
-                    if (currentLabel == layerId) {
-                        layer = layers[i];
-                    }
+                    prettyCropSVGElement(svgElement, layer, 6);
                 }
+                const div = makeDivWithSVGElement(svgElement);
+                divs.push(div);
+                cleanUpReflows();
             }
         }
-        if (layer) {
-            // Force reflow by accessing offsetHeight
-            svgElement.style.display = "none";
-            document.body.appendChild(svgElement);
-            svgElement.offsetHeight;
-            svgElement.style.display = "block";
+    }
+    return divs;
+}
 
-            const bbox = layer.getBBox();
-            console.log(`Bounding box for layer ${layerId}:`, bbox);
+function makeDivWithSVGElement(svgElement) {
+    const div = document.createElement("div");
+    div.style.padding = "0";
+    div.style.margin = "0";
+    div.style.overflow = "hidden";
+    div.innerHTML = new XMLSerializer().serializeToString(svgElement);
+    return div;
+}
 
-            // Optionally, adjust the viewBox of the SVG to fit the bounding box of the layer
-            var scale = 0.5;
-            svgElement.setAttribute(
-                "viewBox",
-                `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`
-            );
-            svgElement.style.transform = `scale(${scale})`; // Adjust the scale as needed
-            svgElement.style.transformOrigin = "top left"; 
-            // Create a div and set its innerHTML to the modified SVG
-            const div = document.createElement("div");
-            div.style.padding = "0";
-            div.style.margin = "0";
-            div.style.border = "none";
-            div.style.height = bbox.height * scale;
-            div.style.width = bbox.width * scale;
-            div.innerHTML = new XMLSerializer().serializeToString(svgElement);
-            document.body.removeChild(svgElement);
-            return div;
+function forceReflow(svgElement) {
+    svgElement.style.display = "none";
+    document.body.appendChild(svgElement);
+    svgElement.offsetHeight;
+    svgElement.offsetWidth;
+    svgElement.style.display = "block";
+    forcedReflows.push(svgElement);
+}
+
+function cleanUpReflows() {
+    for (let e of forcedReflows) {
+        document.body.removeChild(e);
+    }
+    forcedReflows = [];
+}
+
+function prettyCropSVGElement(svgElement, layer, padding) {
+    // Force reflow
+    forceReflow(svgElement);
+    const bbox = getBbox(layer);
+    // figure out center of bbox
+    let cx = bbox.x + bbox.width / 2;
+    let cy = bbox.y + bbox.height / 2;
+    // figure out square dim
+    let dim = Math.max(bbox.width, bbox.height) + padding;
+    let x = cx - dim / 2;
+    let y = cy - dim / 2;
+    var unitScale,
+        units = figureOutUnits(svgElement);
+    svgElement.setAttribute("viewBox", `${x} ${y} ${dim} ${dim}`);
+    svgElement.setAttribute("width", `${dim}${units}`);
+    svgElement.setAttribute("height", `${dim}${units}`);
+}
+
+function cropSVGElement(svgElement, layer) {
+    // Force reflow
+    forceReflow(svgElement);
+    const bbox = getBbox(layer);
+    var unitScale,
+        units = figureOutUnits(svgElement);
+    svgElement.setAttribute("viewBox", `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`);
+    svgElement.setAttribute("width", `${bbox.width}${units}`);
+    svgElement.setAttribute("height", `${bbox.height}${units}`);
+}
+
+function hideAllReferencedLayers(layers) {
+    for (let i = 0; i < layers.length; i++) {
+        const currentLabel = layers[i].getAttribute("inkscape:label");
+        if (currentLabel) {
+            if (boardReferenceMasterList.includes(currentLabel)) {
+                layers[i].style.display = "none";
+            }
         }
     }
+}
+
+function hideAllAltReferencedLayers(layers) {
+    for (let i = 0; i < layers.length; i++) {
+        const currentLabel = layers[i].getAttribute("inkscape:label");
+        if (currentLabel) {
+            if (currentLabel.includes(" Alt")) {
+                layers[i].style.display = "none";
+            }
+        }
+    }
+}
+
+function findLayer(layers, layerId) {
+    var layer = null;
+    for (let i = 0; i < layers.length; i++) {
+        const currentLabel = layers[i].getAttribute("inkscape:label");
+        if (currentLabel) {
+            if (currentLabel == layerId) {
+                layer = layers[i];
+            }
+        }
+    }
+    return layer;
+}
+
+function getBbox(layer) {
+    const bbox = layer.getBBox();
+    if (bbox) {
+        transform = layer.getAttribute("transform");
+        if (transform) {
+            const translateMatch = /translate\(\s*([-\d.]+)\s*,\s*([-\d.]+)\s*\)/.exec(transform);
+            if (translateMatch) {
+                const translateX = parseFloat(translateMatch[1]);
+                const translateY = parseFloat(translateMatch[2]);
+                return {
+                    x: bbox.x + translateX,
+                    y: bbox.y + translateY,
+                    width: bbox.width,
+                    height: bbox.height,
+                };
+            }
+        }
+        return bbox;
+    }
     return null;
+}
+
+function figureOutUnits(svgElement) {
+    const units = svgElement.getAttribute("width").replace(/[0-9.]/g, "");
+    var unitScale = 1;
+
+    switch (units) {
+        case "mm":
+            unitScale = 3.7795275591; // 1mm = 3.7795275591px
+            break;
+        case "cm":
+            unitScale = 37.795275591; // 1cm = 37.795275591px
+            break;
+        case "in":
+            unitScale = 96; // 1in = 96px
+            break;
+        case "pt":
+            unitScale = 1.3333333333; // 1pt = 1.3333333333px
+            break;
+        default:
+            unitScale = 1;
+    }
+    return unitScale, units;
+}
+
+function addRedDot(x, y, r, svgElement) {
+    const redDot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    redDot.setAttribute("cx", x);
+    redDot.setAttribute("cy", y);
+    redDot.setAttribute("r", r); // Radius of the red dot
+    redDot.setAttribute("fill", "red");
+
+    // Append the red dot to the top layer or directly to the SVG if needed
+    svgElement.appendChild(redDot);
 }
 
 function wrapTextNodes() {
@@ -227,9 +346,9 @@ function createTooltip(data, reference) {
     }
     info.textContent = dataString;
     tooltip.appendChild(info);
-    var image = getLayerDiv(reference);
-    if (image) {
-        tooltip.appendChild(image);
+    var images = getTooltipLayerDiv(reference);
+    for (let i of images) {
+        tooltip.appendChild(i);
     }
     return tooltip;
 }
