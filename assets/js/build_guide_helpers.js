@@ -510,6 +510,29 @@ function buildStepComponents() {
     }
 }
 
+function hideAltLayersInHeroImage() { 
+    const completeGraphicsDivs = document.querySelectorAll(".tutorial-complete-graphic");
+
+    completeGraphicsDivs.forEach((div) => {
+
+        for (let svgString of SVGs) {
+            const parser = new DOMParser();
+            const svgDoc = parser.parseFromString(svgString, "image/svg+xml");
+            const svgElement = svgDoc.documentElement;
+            svgElement.style.padding = "0";
+            svgElement.style.margin = "0";
+            svgElement.style.border = "none";
+    
+            // Use getElementsByTagNameNS to handle namespaces
+            const layers = svgElement.getElementsByTagNameNS("*", "g");
+            hideAllAltReferencedLayers(layers);
+            const cdiv = makeDivWithSVGElement(svgElement);
+            cdiv.classList.add('svg-container-div');
+            div.appendChild(cdiv);
+        }
+    });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     getComponentObject()
         .then(() => {
@@ -522,6 +545,7 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error("Error loading SVGs:", error);
         })
         .finally(() => {
+            hideAltLayersInHeroImage();
             wrapTextNodes();
             buildStepComponents();
             setupTutorialBOMTable();
