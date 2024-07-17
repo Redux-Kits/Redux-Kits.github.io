@@ -217,7 +217,7 @@ This is the build guide for the ACA Redux
 
 {% include bom.html bom=page.bom %}
 
-## Step 2: Read The Fancy Manual
+{% include step.html title="RTFM" bom_references="J3,R1" %}
 
 Please read through this guide once or twice before building your amplifiers.  
 You can click into each photo if you need to see it full size.
