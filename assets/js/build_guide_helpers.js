@@ -386,7 +386,39 @@ function showPopulatedLayersAtStep(layers) {
     }
 }
 
-function addHighlightBeneathLayersForCurrentStep(layers, stepReferencesArray, svgElement) {
+function areasToHighlightForCurrentStep(layers, stepReferencesArray, svgElement, border = 5) {
+    areas = [];
+    for (let id of stepReferencesArray) {
+        const layer = findLayer(layers, id);
+        if (layer) {
+            const layerBBox = getBbox(layer);
+            layerBBox.x -= border;
+            layerBBox.y -= border;
+            layerBBox.width += 2 * border;
+            layerBBox.height += 2 * border;
+            areas.push(layerBBox);
+        }
+    }
+    return areas;
+}
+
+function addHighlightForCurrentStepAreas(areas, svgElement) {
+    for (let layerBBox of areas) {
+        // Create a new rect element
+        const highlight = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        highlight.setAttribute("x", layerBBox.x);
+        highlight.setAttribute("y", layerBBox.y);
+        highlight.setAttribute("width", layerBBox.width);
+        highlight.setAttribute("height", layerBBox.height);
+        highlight.setAttribute("fill", "none");
+        highlight.setAttribute("stroke", "red");
+        highlight.setAttribute("stroke-width", "1");
+        highlight.classList.add("cycle-opacity-slow");
+        svgElement.appendChild(highlight);
+    }
+}
+
+function addHighlightBeneathLayersForCurrentStep(areas, svgElement) {
     for (let id of stepReferencesArray) {
         const layer = findLayer(layers, id);
         if (layer) {
@@ -401,6 +433,7 @@ function addHighlightBeneathLayersForCurrentStep(layers, stepReferencesArray, sv
             highlight.setAttribute("fill", "none");
             highlight.setAttribute("stroke", "red");
             highlight.setAttribute("stroke-width", "1");
+            highlight.classList.add("cycle-opacity-slow");
 
             // Insert the highlight rect before the layer to ensure it's beneath it
             svgElement.insertBefore(highlight, layer);
@@ -488,12 +521,70 @@ function drawStepGraphics(node) {
             hideAllReferencedLayers(layers);
             hideAllAltReferencedLayers(layers);
             showPopulatedLayersAtStep(layers);
-            addHighlightBeneathLayersForCurrentStep(layers, stepReferencesArray, svgElement);
+            var areas = areasToHighlightForCurrentStep(layers, stepReferencesArray, svgElement);
+            areas = reduceAreas(areas);
+            addHighlightForCurrentStepAreas(areas, svgElement);
+            // addHighlightBeneathLayersForCurrentStep(layers, stepReferencesArray, svgElement);
             const div = makeDivWithSVGElement(svgElement, -1);
             node.appendChild(div);
             cleanUpReflows();
         }
     }
+}
+
+function reduceAreas(areas) {
+    if (!areas.length) return [];
+
+    // Helper function to check if two bounding boxes overlap
+    function isOverlapping(bb1, bb2) {
+        return (
+            bb1.x < bb2.x + bb2.width &&
+            bb1.x + bb1.width > bb2.x &&
+            bb1.y < bb2.y + bb2.height &&
+            bb1.y + bb1.height > bb2.y
+        );
+    }
+
+    // Helper function to merge two bounding boxes
+    function mergeBoundingBoxes(bb1, bb2) {
+        const x = Math.min(bb1.x, bb2.x);
+        const y = Math.min(bb1.y, bb2.y);
+        const width = Math.max(bb1.x + bb1.width, bb2.x + bb2.width) - x;
+        const height = Math.max(bb1.y + bb1.height, bb2.y + bb2.height) - y;
+        return { x, y, width, height };
+    }
+
+    let reducedAreas = [...areas];
+
+    let hasOverlaps;
+    do {
+        hasOverlaps = false;
+        const newAreas = [];
+
+        while (reducedAreas.length) {
+            const bb = reducedAreas.pop();
+            let merged = false;
+
+            for (let i = 0; i < reducedAreas.length; i++) {
+                if (isOverlapping(bb, reducedAreas[i])) {
+                    const mergedBB = mergeBoundingBoxes(bb, reducedAreas[i]);
+                    reducedAreas.splice(i, 1); // Remove the overlapping bounding box
+                    reducedAreas.push(mergedBB); // Add the merged bounding box back for further checking
+                    merged = true;
+                    hasOverlaps = true;
+                    break;
+                }
+            }
+
+            if (!merged) {
+                newAreas.push(bb);
+            }
+        }
+
+        reducedAreas = newAreas;
+    } while (hasOverlaps);
+
+    return reducedAreas;
 }
 
 function buildStepComponents() {
@@ -510,11 +601,10 @@ function buildStepComponents() {
     }
 }
 
-function hideAltLayersInHeroImage() { 
+function hideAltLayersInHeroImage() {
     const completeGraphicsDivs = document.querySelectorAll(".tutorial-complete-graphic");
 
     completeGraphicsDivs.forEach((div) => {
-
         for (let svgString of SVGs) {
             const parser = new DOMParser();
             const svgDoc = parser.parseFromString(svgString, "image/svg+xml");
@@ -522,12 +612,12 @@ function hideAltLayersInHeroImage() {
             svgElement.style.padding = "0";
             svgElement.style.margin = "0";
             svgElement.style.border = "none";
-    
+
             // Use getElementsByTagNameNS to handle namespaces
             const layers = svgElement.getElementsByTagNameNS("*", "g");
             hideAllAltReferencedLayers(layers);
             const cdiv = makeDivWithSVGElement(svgElement);
-            cdiv.classList.add('svg-container-div');
+            cdiv.classList.add("svg-container-div");
             div.appendChild(cdiv);
         }
     });
