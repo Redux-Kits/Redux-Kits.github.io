@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: tutorial
 title: "ACA Redux"
 categories: 
   - build guide
@@ -222,7 +222,7 @@ This is the build guide for the ACA Redux. Please read through this guide once o
 {% include board_graphics.html bom=page.bom %}
 
 <!-- Section marker, used for generating PDFs, galleries, etc -->
-{% include tutorial_section_marker.html %}
+## END_SECTION ##
 
 ## BOM
 
@@ -230,7 +230,7 @@ This is the build guide for the ACA Redux. Please read through this guide once o
 
 {% include bom.html bom=page.bom %}
 
-{% include tutorial_section_marker.html %}
+## END_SECTION ##
 
 <!-- A step heading, with the associated BOM components that should be shown -->
 <!-- You do not need to number steps, it will be automatic -->
@@ -242,7 +242,7 @@ Note R16 is not grouped with the other resistors.
 <!-- Step graphics are populated from the BOM -->
 {% include graphics_for_step.html bom_references="'R5', 'R6', 'R7', 'R8', 'R9', 'R10', 'R11', 'R12', 'R13', 'R14', 'R15', 'R16'" %}
 
-{% include tutorial_section_marker.html %}
+## END_SECTION ##
 
 <!-- Large Resistor Step -->
 {% include step.html title="Large Resistors" bom_references="'R1', 'R2', 'R3', 'R4'"%}
@@ -254,7 +254,7 @@ The large resistors get warm during operation. Some space off the PCB will help 
 
 ![Large Resistors & Brass Standoff]({{ site.url }}/images/aca-redux-large-resistors-brass-standoff.jpeg)
 
-{% include tutorial_section_marker.html %}
+## END_SECTION ##
 
 <!-- Pots and 10uF Caps -->
 {% include step.html title="Potentionmeter & Small Caps" bom_references="'P1', 'C3', 'C4'" %}
@@ -263,7 +263,7 @@ P1 is keyed and cannot be inserted backwards. Solder the C3 and C4 capacitors wi
 
 {% include graphics_for_step.html bom_references="'P1', 'C3', 'C4'" %}
 
-{% include tutorial_section_marker.html %}
+## END_SECTION ##
 
 <!-- Small Signal Transistors -->
 {% include step.html title="Small Signal Transistors" bom_references="'Q3', 'Q4'" %}
@@ -272,7 +272,7 @@ Q3 is slightly bigger than Q4. Both Q3 and Q4 are directional. The outline of ea
 
 {% include graphics_for_step.html bom_references="'Q3', 'Q4'" %}
 
-{% include tutorial_section_marker.html %}
+## END_SECTION ##
 
 <!-- 1000uf Capacitors -->
 {% include step.html title="Small Signal Transistors" bom_references="'C1', 'C2'" %}
@@ -281,7 +281,7 @@ The leads of C1 & C2 need to be bent down prior to installation. Use a long scre
 
 {% include graphics_for_step.html bom_references="'C1', 'C2'" %}
 
-{% include tutorial_section_marker.html %}
+## END_SECTION ##
 
 <!-- Power Switch -->
 {% include step.html title="Power Switch" bom_references="'SW1'" %}
@@ -290,7 +290,7 @@ Make sure the switch is flat against the PCB before soldering. A round cap is pr
 
 {% include graphics_for_step.html bom_references="'SW1'" %}
 
-{% include tutorial_section_marker.html %}
+## END_SECTION ##
 
 <!-- DC Jack -->
 {% include step.html title="DC Power" bom_references="'J1'" %}
@@ -299,7 +299,7 @@ Make sure the DC Power Jack is flat against the PCB before soldering.
 
 {% include graphics_for_step.html bom_references="'J1'" %}
 
-{% include tutorial_section_marker.html %}
+## END_SECTION ##
 
 <!-- RCA Jack -->
 {% include step.html title="RCA Jack" bom_references="'J2'" %}
@@ -308,7 +308,7 @@ Again, make sure the RCA Jack is flat against the PCB before soldering. It may t
 
 {% include graphics_for_step.html bom_references="'J2'" %}
 
-{% include tutorial_section_marker.html %}
+## END_SECTION ##
 
 <!-- Speaker Posts -->
 {% include step.html title="Speaker Posts" bom_references="'J3', 'J4" %}
@@ -317,7 +317,7 @@ Solder the binding posts to the screw terminal before adding them to the PCB. Th
 
 {% include graphics_for_step.html bom_references="'J3', 'J4" %}
 
-{% include tutorial_section_marker.html %}
+## END_SECTION ##
 
 {% include step.html title="One PCB Side Complete!"  %}
 

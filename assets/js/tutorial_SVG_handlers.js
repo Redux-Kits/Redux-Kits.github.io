@@ -1,9 +1,3 @@
-var SVGs = [];
-var componentObject;
-var boardReferenceMasterList = [];
-var forcedReflows = [];
-var tutorialStepVisibleLayers = [];
-
 function loadBoardReferenceMasterList() {
     for (let component of componentObject) {
         if (component.board_reference) {
@@ -68,23 +62,27 @@ function getTooltipLayerDiv(layerId) {
                     prettyCropSVGElement(svgElement, layer, 6);
                 }
                 const div = makeDivWithSVGElement(svgElement);
-                div.setAttribute('data-view-box', `${svgElement.viewBox.baseVal.x} ${svgElement.viewBox.baseVal.y} ${svgElement.viewBox.baseVal.width} ${svgElement.viewBox.baseVal.height}`)
+                div.setAttribute(
+                    "data-view-box",
+                    `${svgElement.viewBox.baseVal.x} ${svgElement.viewBox.baseVal.y} ${svgElement.viewBox.baseVal.width} ${svgElement.viewBox.baseVal.height}`
+                );
                 divs.push(div);
                 cleanUpReflows();
             }
         }
     }
-    const formattedDivs = []
-    var fd = document.createElement('div');
-    fd.classList.add('toolTipImageContainer')
-    for (let d of divs){
-        const viewBoxForDiv = d.getAttribute('data-view-box').split(' ').map(parseFloat);
-        if (viewBoxForDiv[2] > viewBoxForDiv[3]) { // width > height
+    const formattedDivs = [];
+    var fd = document.createElement("div");
+    fd.classList.add("toolTipImageContainer");
+    for (let d of divs) {
+        const viewBoxForDiv = d.getAttribute("data-view-box").split(" ").map(parseFloat);
+        if (viewBoxForDiv[2] > viewBoxForDiv[3]) {
+            // width > height
             formattedDivs.push(fd);
-            fd = document.createElement('div');
-            fd.classList.add('toolTipImageContainer')
+            fd = document.createElement("div");
+            fd.classList.add("toolTipImageContainer");
         }
-        fd.appendChild(d)
+        fd.appendChild(d);
     }
     formattedDivs.push(fd);
 
@@ -102,7 +100,7 @@ function makeDivWithSVGElement(svgElement, maxDimension = 200) {
     div.style.padding = "0";
     div.style.margin = "0";
     div.style.overflow = "hidden";
-    
+
     const viewBox = svgElement.viewBox.baseVal;
     const aspectRatio = viewBox.width / viewBox.height;
 
@@ -132,7 +130,7 @@ function makeDivWithSVGElement(svgElement, maxDimension = 200) {
 //     div.style.padding = "0";
 //     div.style.margin = "0";
 //     div.style.overflow = "hidden";
-    
+
 //     const viewBox = svgElement.viewBox.baseVal;
 //     const aspectRatio = viewBox.width / viewBox.height;
 
@@ -434,16 +432,16 @@ function createTooltip(data, reference) {
     }
     info.textContent = dataString;
     tooltip.appendChild(info);
-    
+
     var images = getTooltipLayerDiv(reference);
-    if (images){
+    if (images) {
         const tooltipImages = document.createElement("div");
         for (let i of images) {
             tooltipImages.appendChild(i);
         }
         tooltip.appendChild(tooltipImages);
     }
-    
+
     return tooltip;
 }
 
@@ -474,6 +472,7 @@ function areasToHighlightForCurrentStep(layers, stepReferencesArray, svgElement,
             layerBBox.y -= border;
             layerBBox.width += 2 * border;
             layerBBox.height += 2 * border;
+            // fix bboxes falling off here
             areas.push(layerBBox);
         }
     }
@@ -526,6 +525,7 @@ function setupTutorialBOMTable() {
         // Create expand/collapse button
         const button = document.createElement("button");
         button.textContent = "+ Show Components";
+        button.classList.add("gallery-print-exempt");
         button.style.marginBottom = "10px";
         button.addEventListener("click", () => {
             if (container.style.display === "none") {

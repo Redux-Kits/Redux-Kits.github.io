@@ -1,3 +1,11 @@
+var SVGs = [];
+var componentObject;
+var boardReferenceMasterList = [];
+var forcedReflows = [];
+var tutorialStepVisibleLayers = [];
+var slides = [];
+var slidePointer = 0;
+
 document.addEventListener("DOMContentLoaded", function () {
     getComponentObject()
         .then(() => {
@@ -9,10 +17,15 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch((error) => {
             console.error("Error loading SVGs:", error);
         })
-        .finally(() => {
+        .then(() => {
             hideAltLayersInHeroImage();
             wrapTextNodes();
             buildStepComponents();
             setupTutorialBOMTable();
+        })
+        .then(() => {
+            const chunks = findChunks();
+            buildGallery(chunks);
+            window.addEventListener("resize", setupGalleryDims);
         });
 });

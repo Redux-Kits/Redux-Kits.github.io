@@ -1,13 +1,13 @@
 
 
-<div id="board-vector-locations" style="display: none;"
+<div id="board-vector-locations" class="gallery-print-exempt" style="display: none;"
 {% for graphic in include.bom.graphics %}
 
 data-vector-endpoint-{{forloop.index}}="{{ site.baseurl }}/boardvectors/{{ graphic }}"
 {% endfor %}
 ></div>
 
-<div id="components" style="display: none;" data-components='{{ include.bom.components | jsonify }}'></div>
+<div id="components" class="gallery-print-exempt" style="display: none;" data-components='{{ include.bom.components | jsonify }}'></div>
 
 <table class="bom-table">
   <thead>
