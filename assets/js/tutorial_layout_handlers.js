@@ -98,10 +98,12 @@ function setupGalleryDims() {
     prevButton.style.position = "fixed";
     prevButton.style.bottom = `${windowHeight/2}px`;
     prevButton.style.left = "10px";
+    prevButton.style.zIndex = "1000";
 
     nextButton.style.position = "fixed";
     nextButton.style.bottom = `${windowHeight/2}px`;
     nextButton.style.right = "10px";
+    nextButton.style.zIndex = "1000";
 }
 
 function galleryNext() {
