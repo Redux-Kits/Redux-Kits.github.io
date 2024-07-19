@@ -10,6 +10,20 @@
   }
 }
 
+.rotating-ninty-div {
+  transform: rotate(90deg);
+  transform-origin: center;
+}
+
+.toolTipImageContainer {
+  display: flex; /* Enables flexbox layout */
+  flex-wrap: wrap; /* Allows images to wrap to the next line if they overflow */
+  justify-content: center; /* Centers the images horizontally */
+  align-items: center; /* Centers the images vertically within the container */
+  gap: 10px; /* Adds space between the images */
+  padding: 5px;
+}
+
 .tutorial-section-marker{
   display: none;
   width: 0;

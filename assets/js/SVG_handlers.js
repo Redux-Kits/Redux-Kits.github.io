@@ -68,29 +68,55 @@ function getTooltipLayerDiv(layerId) {
                     prettyCropSVGElement(svgElement, layer, 6);
                 }
                 const div = makeDivWithSVGElement(svgElement);
+                div.setAttribute('data-view-box', `${svgElement.viewBox.baseVal.x} ${svgElement.viewBox.baseVal.y} ${svgElement.viewBox.baseVal.width} ${svgElement.viewBox.baseVal.height}`)
                 divs.push(div);
                 cleanUpReflows();
             }
         }
     }
-    return divs;
+    const formattedDivs = []
+    var fd = document.createElement('div');
+    fd.classList.add('toolTipImageContainer')
+    for (let d of divs){
+        const viewBoxForDiv = d.getAttribute('data-view-box').split(' ').map(parseFloat);
+        if (viewBoxForDiv[2] > viewBoxForDiv[3]) { // width > height
+            formattedDivs.push(fd);
+            fd = document.createElement('div');
+            fd.classList.add('toolTipImageContainer')
+        }
+        fd.appendChild(d)
+    }
+    formattedDivs.push(fd);
+
+    return formattedDivs;
 }
 
-function makeDivWithSVGElement(svgElement, minDimension = 200) {
+function rotateToCorrectOrientation(svgElement) {
+    const viewBox = svgElement.viewBox.baseVal;
+    if (viewBox.width > viewBox.height) {
+    }
+}
+
+function makeDivWithSVGElement(svgElement, maxDimension = 200) {
     const div = document.createElement("div");
     div.style.padding = "0";
     div.style.margin = "0";
     div.style.overflow = "hidden";
+    
     const viewBox = svgElement.viewBox.baseVal;
     const aspectRatio = viewBox.width / viewBox.height;
 
-    if (minDimension != -1) {
-        let newWidth = minDimension;
-        let newHeight = minDimension / aspectRatio;
+    let newWidth, newHeight;
 
-        if (newHeight < minDimension) {
-            newHeight = minDimension;
-            newWidth = minDimension * aspectRatio;
+    if (maxDimension !== -1) {
+        if (viewBox.width >= viewBox.height) {
+            // Scale based on width
+            newWidth = maxDimension;
+            newHeight = maxDimension / aspectRatio;
+        } else {
+            // Scale based on height
+            newHeight = maxDimension;
+            newWidth = maxDimension * aspectRatio;
         }
 
         svgElement.setAttribute("width", newWidth);
@@ -100,6 +126,52 @@ function makeDivWithSVGElement(svgElement, minDimension = 200) {
     div.innerHTML = new XMLSerializer().serializeToString(svgElement);
     return div;
 }
+
+// function makeDivWithSVGElement(svgElement, minDimension = 200) {
+//     const div = document.createElement("div");
+//     div.style.padding = "0";
+//     div.style.margin = "0";
+//     div.style.overflow = "hidden";
+    
+//     const viewBox = svgElement.viewBox.baseVal;
+//     const aspectRatio = viewBox.width / viewBox.height;
+
+//     if (minDimension != -1) {
+//         const newHeight = minDimension;
+//         const newWidth = minDimension * aspectRatio;
+
+//         svgElement.setAttribute("width", newWidth);
+//         svgElement.setAttribute("height", newHeight);
+//     }
+
+//     div.innerHTML = new XMLSerializer().serializeToString(svgElement);
+//     return div;
+// }
+
+// function makeDivWithSVGElement(svgElement, minDimension=200) {
+//     const div = document.createElement("div");
+//     div.style.padding = "0";
+//     div.style.margin = "0";
+//     div.style.overflow = "hidden";
+//     const viewBox = svgElement.viewBox.baseVal;
+//     const aspectRatio = viewBox.width / viewBox.height;
+
+//     if (minDimension != -1) {
+//         let newWidth = minDimension;
+//         let newHeight = minDimension / aspectRatio;
+
+//         if (newHeight < minDimension) {
+//             newHeight = minDimension;
+//             newWidth = minDimension * aspectRatio;
+//         }
+
+//         svgElement.setAttribute("width", newWidth);
+//         svgElement.setAttribute("height", newHeight);
+//     }
+
+//     div.innerHTML = new XMLSerializer().serializeToString(svgElement);
+//     return div;
+// }
 
 function forceReflow(svgElement) {
     svgElement.style.display = "none";
@@ -362,10 +434,16 @@ function createTooltip(data, reference) {
     }
     info.textContent = dataString;
     tooltip.appendChild(info);
+    
     var images = getTooltipLayerDiv(reference);
-    for (let i of images) {
-        tooltip.appendChild(i);
+    if (images){
+        const tooltipImages = document.createElement("div");
+        for (let i of images) {
+            tooltipImages.appendChild(i);
+        }
+        tooltip.appendChild(tooltipImages);
     }
+    
     return tooltip;
 }
 
@@ -622,22 +700,3 @@ function hideAltLayersInHeroImage() {
         }
     });
 }
-
-document.addEventListener("DOMContentLoaded", function () {
-    getComponentObject()
-        .then(() => {
-            return loadBoardSVGs();
-        })
-        .then((loadedSVGs) => {
-            SVGs = loadedSVGs;
-        })
-        .catch((error) => {
-            console.error("Error loading SVGs:", error);
-        })
-        .finally(() => {
-            hideAltLayersInHeroImage();
-            wrapTextNodes();
-            buildStepComponents();
-            setupTutorialBOMTable();
-        });
-});
