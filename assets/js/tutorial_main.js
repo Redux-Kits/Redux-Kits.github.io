@@ -7,6 +7,7 @@ var slides = [];
 var slidePointer = 0;
 
 document.addEventListener("DOMContentLoaded", function () {
+    var chunks;
     getComponentObject()
         .then(() => {
             return loadBoardSVGs();
@@ -24,7 +25,9 @@ document.addEventListener("DOMContentLoaded", function () {
             setupTutorialBOMTable();
         })
         .then(() => {
-            const chunks = findChunks();
+            chunks = findChunks();
+        })
+        .then(() => {
             buildGallery(chunks);
             window.addEventListener("resize", setupGalleryDims);
         });
