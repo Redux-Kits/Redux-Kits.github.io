@@ -257,7 +257,7 @@ The large resistors get warm during operation. Some space off the PCB will help 
 ## END_SECTION ##
 
 <!-- Pots and 10uF Caps -->
-{% include step.html title="Potentionmeter & Small Caps" bom_references="'P1', 'C3', 'C4'" %}
+{% include step.html title="Potentionmeter & Small Capacitors" bom_references="'P1', 'C3', 'C4'" %}
 
 P1 is keyed and cannot be inserted backwards. Solder the C3 and C4 capacitors with the long leg in the + hole.
 
@@ -275,7 +275,7 @@ Q3 is slightly bigger than Q4. Both Q3 and Q4 are directional. The outline of ea
 ## END_SECTION ##
 
 <!-- 1000uf Capacitors -->
-{% include step.html title="Small Signal Transistors" bom_references="'C1', 'C2'" %}
+{% include step.html title="Large Capacitors" bom_references="'C1', 'C2'" %}
 
 The leads of C1 & C2 need to be bent down prior to installation. Use a long screw as a bending guide to ensure the bend does not occur too close to the packaging. Before making the bend, note of the direction of the capacitor. The long leg should go in the + hole and the capacitors should lie on the PCB outlines.
 
