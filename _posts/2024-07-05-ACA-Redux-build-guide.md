@@ -323,3 +323,10 @@ Solder the binding posts to the screw terminal before adding them to the PCB. Th
 
 Wait for Nelson to generate a SVG of the bottom of the board. 
 
+<!-- 
+1. Hide board in hover overs in some scenarios (e.g Q1, Q2)
+2. Fix the value / units weirdness in resistors and caps
+3. the things not showing up all have gradients (confirm and fix)
+BACKLOG:
+- Shopify
+ -->
