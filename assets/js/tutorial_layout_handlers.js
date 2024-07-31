@@ -46,44 +46,6 @@ function cloneSVGElement(svgNode) {
     const actualSVG = svgNode.querySelector("svg");
     if (!actualSVG) return svgNode.cloneNode(true);
     return svgNode.cloneNode(true);
-
-    // // Clone the SVG node and get the cloned SVG element
-    // const clonedSvgNode = svgNode.cloneNode(true);
-    // const clonedSVG = clonedSvgNode.querySelector("svg");
-
-    // // Get the parent node and next sibling of the cloned SVG element
-    // const SVGParent = clonedSVG.parentNode;
-    // const SVGNextSibling = clonedSVG.nextSibling;
-
-    // // Convert the cloned SVG element to text and remove the original cloned SVG from the DOM
-    // const textSVG = clonedSVG.outerHTML;
-    // clonedSVG.remove();
-
-    // // Parse the SVG text back into an SVG element
-    // const parser = new DOMParser();
-    // const svgDoc = parser.parseFromString(textSVG, "image/svg+xml");
-    // const svgElement = svgDoc.documentElement;
-
-    // // Set styles for the new SVG element
-    // svgElement.style.padding = "0";
-    // svgElement.style.margin = "0";
-    // svgElement.style.border = "none";
-
-    // // Create a div container for the new SVG element
-    // const div = document.createElement("div");
-    // div.style.padding = "0";
-    // div.style.margin = "0";
-    // div.style.overflow = "hidden";
-    // div.appendChild(svgElement);
-
-    // // Re-insert the new SVG element back into the DOM
-    // if (SVGNextSibling) {
-    //     SVGParent.insertBefore(div, SVGNextSibling);
-    // } else {
-    //     SVGParent.appendChild(div);
-    // }
-
-    // return clonedSvgNode;
 }
 
 // Helper function to reflow the SVG
@@ -266,4 +228,24 @@ function findDuplicateIds() {
     }
 
     return Array.from(duplicates);
+}
+
+function generatePrintView(chunks) {
+    const printContentDiv = document.querySelector(".print-content");
+    printContentDiv.innerHTML = ""; // Clear existing content
+    console.log(chunks);
+
+    chunks.forEach(chunk => {
+        
+        const pageDiv = document.createElement("div");
+        pageDiv.classList.add("print-page");
+        
+        chunk.forEach(node => {
+            console.log(node);
+            node.style.display = 'block';
+            pageDiv.appendChild(node);
+        });
+
+        printContentDiv.appendChild(pageDiv);
+    });
 }

@@ -6,8 +6,21 @@ var tutorialStepVisibleLayers = [];
 var slides = [];
 var slidePointer = 0;
 
+function deepCopyDOMArray(array) {
+    return array.map((innerArray) => {
+        return innerArray.map((element) => {
+            if (element.cloneNode) {
+                return element.cloneNode(true);
+            } else {
+                return element; // In case it's not a DOM element
+            }
+        });
+    });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     var chunks;
+    var printChunks;
     hideGalleryButtons();
     getComponentObject()
         .then(() => {
@@ -27,9 +40,13 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(() => {
             chunks = findChunks();
+            console.log(chunks);
+            printChunks = deepCopyDOMArray(chunks);
+            console.log(printChunks);
         })
         .then(() => {
             buildGallery(chunks);
+
             window.addEventListener("resize", setupGalleryDims);
             const duplicateIds = findDuplicateIds();
             if (duplicateIds.length > 0) {
@@ -37,5 +54,8 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 console.log("No duplicate IDs found.");
             }
+        })
+        .then(() => {
+            generatePrintView(printChunks);
         });
 });

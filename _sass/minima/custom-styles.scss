@@ -196,32 +196,32 @@ select:focus {
     padding: 10px;
 }
 
-.gallery-content button{
-  margin: 5px;
+.gallery-content button {
+    margin: 5px;
 }
 
 .flex-row-container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap; /* No wrapping, all items in a single line */
-  justify-content: flex-start; /* Align items to the left */
-  align-items: center; /* Align items to the top */
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap; /* No wrapping, all items in a single line */
+    justify-content: flex-start; /* Align items to the left */
+    align-items: center; /* Align items to the top */
 }
 
 .flex-row-container > div {
-  margin: 10px; /* Add some margin to the child divs */
+    margin: 10px; /* Add some margin to the child divs */
 }
 
 .flex-vert-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
-  height: 100%; /* Ensure the container takes the full height of its parent */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    height: 100%; /* Ensure the container takes the full height of its parent */
 }
 
 .flex-vert-container > div:first-child {
-  align-self: flex-start; /* Ensure the first child aligns to the top */
+    align-self: flex-start; /* Ensure the first child aligns to the top */
 }
 
 .offscreen-hidden-container {
@@ -231,4 +231,57 @@ select:focus {
     width: 0;
     height: 0;
     overflow: hidden;
+}
+
+.print-content {
+    overflow: auto;
+}
+
+.print-page {
+    width: 210mm; /* A4 page width */
+    height: 297mm; /* A4 page height */
+    margin: 20mm auto; /* Center the pages with a margin */
+    padding: 10mm;
+    background: white;
+    color: black;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    page-break-after: always; /* Ensure each section is on a new page */
+    .cycle-opacity-slow {
+        animation: none;
+    }
+}
+
+.print-page table {
+    font-size: 10pt; /* Smaller text for tables */
+    width: 100%; /* Ensure tables take the full width */
+    border-collapse: collapse; /* Merge borders */
+    background: white; /* White background for all cells */
+    color: black;
+}
+
+.print-page table th,
+.print-page table td {
+    padding: none;
+    border: 1px solid #ddd; /* Light border for table cells */
+    line-height: 1; /* Reduce line spacing gaps */
+    background: white; /* White background for cells */
+    color: black;
+}
+
+.print-page .bom-table th:last-child,
+.print-page .bom-table td:last-child {
+    display: none; /* Hide the last column */
+}
+
+.print-page select {
+    background: white; /* White background for select elements */
+    color: black; /* Ensure the text is black */
+    border: 1px solid #ddd; /* Light border */
+    padding: 2px; /* Slight padding for select elements */
+}
+
+@media print {
+    .print-page {
+        page-break-after: always;
+    }
 }
