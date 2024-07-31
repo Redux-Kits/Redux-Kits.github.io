@@ -10,7 +10,7 @@ tags:
 difficulty:
   - easy
 bom:
-  graphics: ["ACA-Redux-Assembly-Graphic.svg"]
+  graphics: ["ACA-Redux-Assembly-Graphic.svg"] #, "ACA-Redux-board-backside.svg"
   components:
     - board_reference: ["-"]
       part: "Circuit boards"

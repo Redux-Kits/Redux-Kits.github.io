@@ -30,5 +30,11 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(() => {
             buildGallery(chunks);
             window.addEventListener("resize", setupGalleryDims);
+            const duplicateIds = findDuplicateIds();
+            if (duplicateIds.length > 0) {
+                console.warn("Duplicate IDs found:", duplicateIds);
+            } else {
+                console.log("No duplicate IDs found.");
+            }
         });
 });

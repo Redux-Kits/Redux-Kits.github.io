@@ -46,6 +46,43 @@ function findChunks() {
     return chunks;
 }
 
+
+function findDuplicateIds() {
+    const allElements = document.getElementsByTagName('*');
+    const idMap = new Map();
+    const duplicates = new Set();
+
+    for (let element of allElements) {
+        const id = element.id;
+        if (id) {
+            if (idMap.has(id)) {
+                duplicates.add(id);
+            } else {
+                idMap.set(id, element);
+            }
+        }
+    }
+
+    return Array.from(duplicates);
+}
+
+function isImageNode(node) {
+    if (node.nodeType === Node.ELEMENT_NODE) {
+        if (node.tagName === "IMG") {
+            return true;
+        }
+        // Check if any descendant nodes are images
+        if (node.querySelector("img")) {
+            return true;
+        }
+        // Check if the node is an SVG or contains an SVG
+        if (node.tagName === "SVG" || node.querySelector("svg")) {
+            return true;
+        }
+    }
+    return false;
+}
+
 function isCommentNode(node) {
     return node.nodeType === Node.COMMENT_NODE;
 }
@@ -110,7 +147,7 @@ function galleryNext() {
     slides[slidePointer].removeTempElements();
     slidePointer += 1;
     slidePointer = Math.min(slides.length - 1, slidePointer);
-    console.log(slides[slidePointer]);
+    // console.log(slides[slidePointer]);
     drawSlide();
 }
 
