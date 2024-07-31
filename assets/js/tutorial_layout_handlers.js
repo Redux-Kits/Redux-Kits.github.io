@@ -1,17 +1,13 @@
 function findChunks() {
-    // Find the div with class 'post_content'
     const postContentDiv = document.querySelector(".post-content");
-    if (!postContentDiv) return []; // If the div is not found, return an empty array
+    if (!postContentDiv) return [];
 
-    // Find the post title and post meta elements
     const postTitle = document.querySelector(".post-title");
     const postMeta = document.querySelector(".post-meta");
 
-    // Initialize an array to hold the chunks
     const chunks = [];
     let currentChunk = [];
 
-    // Add post title and post meta to the first chunk if they exist
     if (postTitle) {
         currentChunk.push(postTitle.cloneNode(true));
     }
@@ -19,26 +15,20 @@ function findChunks() {
         currentChunk.push(postMeta.cloneNode(true));
     }
 
-    // Iterate over the child nodes of the postContentDiv
     Array.from(postContentDiv.childNodes).forEach((node) => {
         if (node.nodeType === Node.ELEMENT_NODE && node.tagName.startsWith("H") && node.textContent === "END_SECTION") {
-            // If the node is an h element with text 'END_SECTION'
             if (currentChunk.length > 0) {
                 chunks.push(currentChunk);
                 currentChunk = [];
             }
-            // Remove the h element
             node.remove();
         } else {
-            // Skip comment nodes, empty text nodes, and nodes with class 'gallery-print-exempt'
             if (!isCommentNode(node) && !isEmptyTextNode(node) && !hasClass(node, "gallery-print-exempt")) {
-                // Add the node to the current chunk
                 currentChunk.push(node.cloneNode(true));
             }
         }
     });
 
-    // Add any remaining nodes to the chunks array
     if (currentChunk.length > 0) {
         chunks.push(currentChunk);
     }
@@ -46,6 +36,66 @@ function findChunks() {
     return chunks;
 }
 
+function isSVGNode(node) {
+    if (node.tagName === "SVG" || node.querySelector("svg")) {
+        return true;
+    }
+}
+
+function cloneSVGElement(svgNode) {
+    const actualSVG = svgNode.querySelector("svg");
+    if (!actualSVG) return svgNode.cloneNode(true);
+    return svgNode.cloneNode(true);
+
+    // // Clone the SVG node and get the cloned SVG element
+    // const clonedSvgNode = svgNode.cloneNode(true);
+    // const clonedSVG = clonedSvgNode.querySelector("svg");
+
+    // // Get the parent node and next sibling of the cloned SVG element
+    // const SVGParent = clonedSVG.parentNode;
+    // const SVGNextSibling = clonedSVG.nextSibling;
+
+    // // Convert the cloned SVG element to text and remove the original cloned SVG from the DOM
+    // const textSVG = clonedSVG.outerHTML;
+    // clonedSVG.remove();
+
+    // // Parse the SVG text back into an SVG element
+    // const parser = new DOMParser();
+    // const svgDoc = parser.parseFromString(textSVG, "image/svg+xml");
+    // const svgElement = svgDoc.documentElement;
+
+    // // Set styles for the new SVG element
+    // svgElement.style.padding = "0";
+    // svgElement.style.margin = "0";
+    // svgElement.style.border = "none";
+
+    // // Create a div container for the new SVG element
+    // const div = document.createElement("div");
+    // div.style.padding = "0";
+    // div.style.margin = "0";
+    // div.style.overflow = "hidden";
+    // div.appendChild(svgElement);
+
+    // // Re-insert the new SVG element back into the DOM
+    // if (SVGNextSibling) {
+    //     SVGParent.insertBefore(div, SVGNextSibling);
+    // } else {
+    //     SVGParent.appendChild(div);
+    // }
+
+    // return clonedSvgNode;
+}
+
+// Helper function to reflow the SVG
+function reflowSVG(element) {
+    // Force reflow for the current element
+    element.offsetHeight;
+
+    // Recursively reflow all child elements
+    Array.from(element.children).forEach((child) => {
+        reflowSVG(child);
+    });
+}
 
 function isImageNode(node) {
     if (node.nodeType === Node.ELEMENT_NODE) {
@@ -86,21 +136,40 @@ function onViewSelectDropdownChange() {
 
     switch (selectedValue) {
         case "print":
-            scrollContentDiv.hidden = true;
-            galleryContentDiv.hidden = true;
-            printContentDiv.hidden = false;
+            scrollContentDiv.classList.add("offscreen-hidden-container");
+            galleryContentDiv.classList.add("offscreen-hidden-container");
+            printContentDiv.classList.remove("offscreen-hidden-container");
+            hideGalleryButtons();
             break;
         case "gallery":
-            scrollContentDiv.hidden = true;
-            galleryContentDiv.hidden = false;
-            printContentDiv.hidden = true;
+            scrollContentDiv.classList.add("offscreen-hidden-container");
+            galleryContentDiv.classList.remove("offscreen-hidden-container");
+            printContentDiv.classList.add("offscreen-hidden-container");
+            showGalleryButtons();
             break;
         default: // scroll
-            scrollContentDiv.hidden = false;
-            galleryContentDiv.hidden = true;
-            printContentDiv.hidden = true;
+            scrollContentDiv.classList.remove("offscreen-hidden-container");
+            galleryContentDiv.classList.add("offscreen-hidden-container");
+            printContentDiv.classList.add("offscreen-hidden-container");
+            hideGalleryButtons();
             break;
     }
+}
+
+function showGalleryButtons() {
+    const prevButton = document.getElementById("galleryPrevButton");
+    const nextButton = document.getElementById("galleryNextButton");
+
+    if (prevButton) prevButton.style.display = "inline-block";
+    if (nextButton) nextButton.style.display = "inline-block";
+}
+
+function hideGalleryButtons() {
+    const prevButton = document.getElementById("galleryPrevButton");
+    const nextButton = document.getElementById("galleryNextButton");
+
+    if (prevButton) prevButton.style.display = "none";
+    if (nextButton) nextButton.style.display = "none";
 }
 
 function setupGalleryDims() {
@@ -114,12 +183,12 @@ function setupGalleryDims() {
 
     // Position the buttons
     prevButton.style.position = "fixed";
-    prevButton.style.bottom = `${windowHeight/2}px`;
+    prevButton.style.bottom = `${windowHeight / 2}px`;
     prevButton.style.left = "10px";
     prevButton.style.zIndex = "1000";
 
     nextButton.style.position = "fixed";
-    nextButton.style.bottom = `${windowHeight/2}px`;
+    nextButton.style.bottom = `${windowHeight / 2}px`;
     nextButton.style.right = "10px";
     nextButton.style.zIndex = "1000";
 }
@@ -146,8 +215,8 @@ function drawSlide() {
     if (!container) {
         container = document.createElement("div");
         container.classList.add("gallery-container");
-        container.style.width='100%'
-        container.style.height='100%'
+        container.style.width = "100%";
+        container.style.height = "100%";
         gallery.appendChild(container);
     } else {
         container.innerHTML = "";
@@ -180,9 +249,8 @@ function buildGallery(chunks) {
     drawSlide();
 }
 
-
 function findDuplicateIds() {
-    const allElements = document.getElementsByTagName('*');
+    const allElements = document.getElementsByTagName("*");
     const idMap = new Map();
     const duplicates = new Set();
 

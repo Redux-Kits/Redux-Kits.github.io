@@ -219,6 +219,7 @@ This is the build guide for the ACA Redux. Please read through this guide once o
 
 <!-- To draw all SVG graphics: -->
 
+
 {% include board_graphics.html bom=page.bom %}
 
 <!-- Section marker, used for generating PDFs, galleries, etc -->

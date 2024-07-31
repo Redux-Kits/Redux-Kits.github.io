@@ -75,6 +75,16 @@ class Slide {
         this.tempElements = [];
     }
 
+    reflowSVG(element) {
+        // Force reflow for the current element
+        element.offsetHeight;
+    
+        // Recursively reflow all child elements
+        Array.from(element.children).forEach(child => {
+            reflowSVG(child);
+        });
+    }
+
     createTitlePage(container) {
         const all_content = this.createTempElement("div");
         all_content.classList.add("flex-vert-container");

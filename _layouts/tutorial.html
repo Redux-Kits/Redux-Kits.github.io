@@ -48,11 +48,11 @@ layout: base
     {{ content }}
   </div>
 
-  <div class="gallery-content" hidden>
+  <div class="gallery-content offscreen-hidden-container">
     <button id="galleryPrevButton" onclick="galleryPrev()"><<</button>
     <button id="galleryNextButton" onclick="galleryNext()">>></button>
   </div>
-  <div class="print-content" hidden></div>
+  <div class="print-content offscreen-hidden-container"></div>
 
   {%- if site.disqus.shortname -%}
     {%- include disqus_comments.html -%}

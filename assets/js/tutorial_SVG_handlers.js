@@ -125,52 +125,6 @@ function makeDivWithSVGElement(svgElement, maxDimension = 200) {
     return div;
 }
 
-// function makeDivWithSVGElement(svgElement, minDimension = 200) {
-//     const div = document.createElement("div");
-//     div.style.padding = "0";
-//     div.style.margin = "0";
-//     div.style.overflow = "hidden";
-
-//     const viewBox = svgElement.viewBox.baseVal;
-//     const aspectRatio = viewBox.width / viewBox.height;
-
-//     if (minDimension != -1) {
-//         const newHeight = minDimension;
-//         const newWidth = minDimension * aspectRatio;
-
-//         svgElement.setAttribute("width", newWidth);
-//         svgElement.setAttribute("height", newHeight);
-//     }
-
-//     div.innerHTML = new XMLSerializer().serializeToString(svgElement);
-//     return div;
-// }
-
-// function makeDivWithSVGElement(svgElement, minDimension=200) {
-//     const div = document.createElement("div");
-//     div.style.padding = "0";
-//     div.style.margin = "0";
-//     div.style.overflow = "hidden";
-//     const viewBox = svgElement.viewBox.baseVal;
-//     const aspectRatio = viewBox.width / viewBox.height;
-
-//     if (minDimension != -1) {
-//         let newWidth = minDimension;
-//         let newHeight = minDimension / aspectRatio;
-
-//         if (newHeight < minDimension) {
-//             newHeight = minDimension;
-//             newWidth = minDimension * aspectRatio;
-//         }
-
-//         svgElement.setAttribute("width", newWidth);
-//         svgElement.setAttribute("height", newHeight);
-//     }
-
-//     div.innerHTML = new XMLSerializer().serializeToString(svgElement);
-//     return div;
-// }
-
 function forceReflow(svgElement) {
     svgElement.style.display = "none";
     document.body.appendChild(svgElement);

@@ -223,3 +223,12 @@ select:focus {
 .flex-vert-container > div:first-child {
   align-self: flex-start; /* Ensure the first child aligns to the top */
 }
+
+.offscreen-hidden-container {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}

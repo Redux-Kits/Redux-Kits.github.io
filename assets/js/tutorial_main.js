@@ -8,6 +8,7 @@ var slidePointer = 0;
 
 document.addEventListener("DOMContentLoaded", function () {
     var chunks;
+    hideGalleryButtons();
     getComponentObject()
         .then(() => {
             return loadBoardSVGs();
