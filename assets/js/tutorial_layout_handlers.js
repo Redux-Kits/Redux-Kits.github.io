@@ -47,25 +47,6 @@ function findChunks() {
 }
 
 
-function findDuplicateIds() {
-    const allElements = document.getElementsByTagName('*');
-    const idMap = new Map();
-    const duplicates = new Set();
-
-    for (let element of allElements) {
-        const id = element.id;
-        if (id) {
-            if (idMap.has(id)) {
-                duplicates.add(id);
-            } else {
-                idMap.set(id, element);
-            }
-        }
-    }
-
-    return Array.from(duplicates);
-}
-
 function isImageNode(node) {
     if (node.nodeType === Node.ELEMENT_NODE) {
         if (node.tagName === "IMG") {
@@ -197,4 +178,24 @@ function buildGallery(chunks) {
     });
     slides[0].type = "title";
     drawSlide();
+}
+
+
+function findDuplicateIds() {
+    const allElements = document.getElementsByTagName('*');
+    const idMap = new Map();
+    const duplicates = new Set();
+
+    for (let element of allElements) {
+        const id = element.id;
+        if (id) {
+            if (idMap.has(id)) {
+                duplicates.add(id);
+            } else {
+                idMap.set(id, element);
+            }
+        }
+    }
+
+    return Array.from(duplicates);
 }
