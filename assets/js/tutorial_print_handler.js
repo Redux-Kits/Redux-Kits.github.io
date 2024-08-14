@@ -22,7 +22,7 @@ function generatePrintView(chunks) {
                 wrapperDiv.appendChild(node);
                 if (wrapperDiv.querySelector("p")) {
                     wrapperDiv.querySelectorAll("p").forEach((p) => {
-                        p.style.textAlign = "center";
+                        p.style.textAlign = "left";
                     });
                 }
 
