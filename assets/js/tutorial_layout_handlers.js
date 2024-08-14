@@ -98,12 +98,11 @@ function onViewSelectDropdownChange() {
 
     switch (selectedValue) {
         case "print":
-            scrollContentDiv.classList.add("offscreen-hidden-container");
-            galleryContentDiv.classList.add("offscreen-hidden-container");
-            printContentDiv.classList.remove("offscreen-hidden-container");
-            hideGalleryButtons();
+            // scrollContentDiv.classList.add("offscreen-hidden-container");
+            // galleryContentDiv.classList.add("offscreen-hidden-container");
+            // printContentDiv.classList.remove("offscreen-hidden-container");
+            // hideGalleryButtons();
             printAllPrintPageDivs();
-            // printAllPages();
             break;
         case "gallery":
             scrollContentDiv.classList.add("offscreen-hidden-container");
