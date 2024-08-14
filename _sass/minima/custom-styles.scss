@@ -54,11 +54,11 @@
     width: 100%;
 }
 
+
 .tutorial-step-graphic,
-.tutorial-complete-graphic,
 .svg-container-div {
     display: flex;
-    justify-content: center; /* Centers children horizontally */
+    justify-content: center; /* Centers children horizontally */ // 
     width: 100%;
     svg {
         width: 100%;
@@ -66,6 +66,7 @@
         max-width: 100%; /* Ensure it doesn't exceed the container's width */
     }
 }
+
 .tutorial-header-container {
     display: flex;
     flex-wrap: wrap;
@@ -238,10 +239,10 @@ select:focus {
 }
 
 .print-page {
-    width: 210mm; /* A4 page width */
-    height: 297mm; /* A4 page height */
-    margin: 20mm auto; /* Center the pages with a margin */
-    padding: 10mm;
+    // width: 210mm; /* A4 page width */
+    // height: 297mm; /* A4 page height */
+    // margin: 20mm auto; /* Center the pages with a margin */
+    // padding: 10mm;
     background: white;
     color: black;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
@@ -249,39 +250,48 @@ select:focus {
     .cycle-opacity-slow {
         animation: none;
     }
+
+    // .tutorial-step-graphic {
+    //     text-align: left;
+    // }
+
+    img {
+        max-width: 50%;
+    }
+
+    // div {
+    //     max-width: 50%;
+    // }
 }
 
 .print-page table {
     font-size: 10pt; /* Smaller text for tables */
     width: 100%; /* Ensure tables take the full width */
     border-collapse: collapse; /* Merge borders */
+    border: 0px;
     background: white; /* White background for all cells */
     color: black;
-}
-
-.print-page table th,
-.print-page table td {
     padding: none;
-    border: 1px solid #ddd; /* Light border for table cells */
-    line-height: 1; /* Reduce line spacing gaps */
-    background: white; /* White background for cells */
-    color: black;
-}
-
-.print-page .bom-table th:last-child,
-.print-page .bom-table td:last-child {
-    display: none; /* Hide the last column */
-}
-
-.print-page select {
-    background: white; /* White background for select elements */
-    color: black; /* Ensure the text is black */
-    border: 1px solid #ddd; /* Light border */
-    padding: 2px; /* Slight padding for select elements */
-}
-
-@media print {
-    .print-page {
-        page-break-after: always;
+    .custom-checkbox {
+        background-color: white;
+        border: 1px solid black;
+        padding: none;
+    }
+    .checkmark {
+        display: none;
+        padding: none;
+    }
+    thead,
+    tbody {
+        width: 100%;
+    }
+    th,
+    td {
+        border: 1px solid black;
+        padding: 2px 2px;
+        line-height: 1; /* Reduce line spacing gaps */
+        background: white; /* White background for cells */
+        color: black;
+        width: 25%;
     }
 }

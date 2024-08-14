@@ -102,6 +102,8 @@ function onViewSelectDropdownChange() {
             galleryContentDiv.classList.add("offscreen-hidden-container");
             printContentDiv.classList.remove("offscreen-hidden-container");
             hideGalleryButtons();
+            printAllPrintPageDivs();
+            // printAllPages();
             break;
         case "gallery":
             scrollContentDiv.classList.add("offscreen-hidden-container");
@@ -228,24 +230,4 @@ function findDuplicateIds() {
     }
 
     return Array.from(duplicates);
-}
-
-function generatePrintView(chunks) {
-    const printContentDiv = document.querySelector(".print-content");
-    printContentDiv.innerHTML = ""; // Clear existing content
-    console.log(chunks);
-
-    chunks.forEach(chunk => {
-        
-        const pageDiv = document.createElement("div");
-        pageDiv.classList.add("print-page");
-        
-        chunk.forEach(node => {
-            console.log(node);
-            node.style.display = 'block';
-            pageDiv.appendChild(node);
-        });
-
-        printContentDiv.appendChild(pageDiv);
-    });
 }

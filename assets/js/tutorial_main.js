@@ -40,9 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(() => {
             chunks = findChunks();
-            console.log(chunks);
             printChunks = deepCopyDOMArray(chunks);
-            console.log(printChunks);
         })
         .then(() => {
             buildGallery(chunks);

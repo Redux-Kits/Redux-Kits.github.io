@@ -100,6 +100,7 @@ function makeDivWithSVGElement(svgElement, maxDimension = 200) {
     div.style.padding = "0";
     div.style.margin = "0";
     div.style.overflow = "hidden";
+    div.classList.add('generated-div-with-svg-element')
 
     const viewBox = svgElement.viewBox.baseVal;
     const aspectRatio = viewBox.width / viewBox.height;
@@ -406,14 +407,17 @@ function positionTooltip(event, tooltip) {
 }
 
 function showPopulatedLayersAtStep(layers) {
+    var count = 0;
     for (let i = 0; i < layers.length; i++) {
         const currentLabel = layers[i].getAttribute("inkscape:label");
         if (currentLabel) {
             if (tutorialStepVisibleLayers.includes(currentLabel)) {
                 layers[i].style.display = "block";
+                count += 1;
             }
         }
     }
+    return count;
 }
 
 function areasToHighlightForCurrentStep(layers, stepReferencesArray, svgElement, border = 5) {
@@ -552,13 +556,15 @@ function drawStepGraphics(node) {
             const layers = svgElement.getElementsByTagNameNS("*", "g");
             hideAllReferencedLayers(layers);
             hideAllAltReferencedLayers(layers);
-            showPopulatedLayersAtStep(layers);
-            var areas = areasToHighlightForCurrentStep(layers, stepReferencesArray, svgElement);
-            areas = reduceAreas(areas);
-            addHighlightForCurrentStepAreas(areas, svgElement);
-            // addHighlightBeneathLayersForCurrentStep(layers, stepReferencesArray, svgElement);
-            const div = makeDivWithSVGElement(svgElement, -1);
-            node.appendChild(div);
+            const count = showPopulatedLayersAtStep(layers);
+            if (count > 0) {
+                var areas = areasToHighlightForCurrentStep(layers, stepReferencesArray, svgElement);
+                areas = reduceAreas(areas);
+                addHighlightForCurrentStepAreas(areas, svgElement);
+                // addHighlightBeneathLayersForCurrentStep(layers, stepReferencesArray, svgElement);
+                const div = makeDivWithSVGElement(svgElement, -1);
+                node.appendChild(div);
+            }
             cleanUpReflows();
         }
     }
@@ -637,10 +643,20 @@ function hideAltLayersInHeroImage() {
     const completeGraphicsDivs = document.querySelectorAll(".tutorial-complete-graphic");
 
     completeGraphicsDivs.forEach((div) => {
+        const mainDiv = document.createElement("div");
+        // Set the display property to flex
+        mainDiv.classList.add("complete-graphics-showcase");
+        mainDiv.style.display = "flex";
+        // Additional flexbox properties
+        mainDiv.style.flexDirection = "row"; // Default is 'row', but can be 'column'
+        mainDiv.style.justifyContent = "center"; // Center items horizontally
+        mainDiv.style.alignItems = "center"; // Center items vertically
+        mainDiv.style.gap = "10px"; // Optional: Adds spacing between flex items
         for (let svgString of SVGs) {
             const parser = new DOMParser();
             const svgDoc = parser.parseFromString(svgString, "image/svg+xml");
             const svgElement = svgDoc.documentElement;
+            scaleSvgToPercentOfWindow(svgElement, 0.5);
             svgElement.style.padding = "0";
             svgElement.style.margin = "0";
             svgElement.style.border = "none";
@@ -649,8 +665,36 @@ function hideAltLayersInHeroImage() {
             const layers = svgElement.getElementsByTagNameNS("*", "g");
             hideAllAltReferencedLayers(layers);
             const cdiv = makeDivWithSVGElement(svgElement);
-            cdiv.classList.add("svg-container-div");
-            div.appendChild(cdiv);
+            const bdiv = document.createElement("div");
+            bdiv.style.padding = "0px";
+            bdiv.style.margin = "0px";
+            bdiv.style.overflow = "hidden";
+            bdiv.classList.add("svg-container-div");
+            bdiv.appendChild(cdiv);
+            mainDiv.appendChild(bdiv);
         }
+        div.appendChild(mainDiv);
+        // div.insertAdjacentElement('afterend', mainDiv);
     });
+}
+
+function scaleSvgToPercentOfWindow(svgElement, percent) {
+    var bodyHeight = window.innerHeight;
+    var desiredHeightPercentage = percent; // 50%
+    var svgHeight = bodyHeight * desiredHeightPercentage;
+
+    var viewBox = svgElement.getAttribute("viewBox");
+    var aspectRatio = 1; // Default aspect ratio
+
+    if (viewBox) {
+        var viewBoxValues = viewBox.split(" ");
+        var viewBoxWidth = parseFloat(viewBoxValues[2]);
+        var viewBoxHeight = parseFloat(viewBoxValues[3]);
+        aspectRatio = viewBoxWidth / viewBoxHeight;
+    }
+
+    var svgWidth = svgHeight * aspectRatio;
+
+    svgElement.style.width = svgWidth + "px";
+    svgElement.style.height = svgHeight + "px";
 }

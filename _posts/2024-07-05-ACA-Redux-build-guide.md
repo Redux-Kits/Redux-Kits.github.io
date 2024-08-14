@@ -10,7 +10,7 @@ tags:
 difficulty:
   - easy
 bom:
-  graphics: ["ACA-Redux-Assembly-Graphic.svg"] #, "ACA-Redux-board-backside.svg"
+  graphics: ["ACA-Redux-Assembly-Graphic.svg" , "ACA-Redux-board-backside.svg"] #
   components:
     - board_reference: ["-"]
       part: "Circuit boards"
@@ -327,7 +327,6 @@ Wait for Nelson to generate a SVG of the bottom of the board.
 <!-- 
 1. Hide board in hover overs in some scenarios (e.g Q1, Q2)
 2. Fix the value / units weirdness in resistors and caps
-3. the things not showing up all have gradients (confirm and fix)
 BACKLOG:
 - Shopify
  -->
