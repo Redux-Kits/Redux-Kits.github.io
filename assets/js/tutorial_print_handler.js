@@ -1,4 +1,5 @@
 const maxPageHeight = 297 * 3.77953 - 40; // Convert mm to px and subtract margins
+var combinedHTML = "";
 
 function generatePrintView(chunks) {
     const printContentDiv = document.querySelector(".print-content");
@@ -63,10 +64,10 @@ function setFlexColumn(className, div) {
     div.querySelectorAll("." + className).forEach((element) => {
         element.style.display = "flex";
         element.style.flexDirection = "column";
-        element.querySelectorAll(".generated-div-with-svg-element").forEach((e)=>{
-            e.style.width = '100%';
-            e.style.textAlign = 'center';
-        })
+        element.querySelectorAll(".generated-div-with-svg-element").forEach((e) => {
+            e.style.width = "100%";
+            e.style.textAlign = "center";
+        });
     });
 }
 
@@ -109,72 +110,130 @@ function convertSVGsToImages(parentElement) {
         // Replace SVG with the image
         svg.parentNode.style.width = "100%";
         svg.parentNode.parentNode.style.width = "100%";
-        console.log(svg.parentNode);
-        console.log(svg.parentNode.parentNode);
         svg.parentNode.replaceChild(img, svg);
     });
 }
 
-function printAllPrintPageDivs() {
-    if (typeof printJS === "undefined") {
-        console.error("Print.js is not loaded.");
-        return;
-    }
-
+function combineForPrinting() {
     var printDivs = document.querySelectorAll(".print-page");
-    var combinedHTML = "";
+    combinedHTML = "";
 
     printDivs.forEach(function (div) {
-        // Convert SVGs to images
-        // convertSVGsToImages(div);
-
-        // Add the outerHTML to the combinedHTML string
         combinedHTML += div.outerHTML;
     });
+}
 
-    // Use printJS to print the combined HTML as a PDF
-    printJS({
-        printable: combinedHTML,
-        type: "raw-html",
-        style: `
-            @page { margin: 20mm; }
-            body { font-family: Arial, sans-serif; font-size: 14px;}
-            .print-page { page-break-after: always; }
-            .complete-graphics-showcase{
-                width: 100%;
+function ensureImagesLoaded(callback) {
+    const images = document.querySelectorAll('img');
+    let loadedCount = 0;
+
+    if (images.length === 0) {
+        callback(); // No images to load
+    }
+
+    images.forEach((img) => {
+        if (img.complete) {
+            loadedCount++;
+            if (loadedCount === images.length) {
+                callback(); // All images are loaded
             }
-            
-            .tutorial-step-graphic {
-                max-width: 100%;
-                text-align: center;
-            }
-            table {
-                width: 100%;
-                border-collapse: collapse; /* Ensure borders are collapsed */
-            }
-            th, td {
-                border: 1px solid black; /* Apply border to table cells */
-                padding: 8px; /* Optional: Add some padding for better readability */
-            }
-            img {
-                max-width: 50%;
-            }
-            .custom-checkbox {
-                position: relative;
-                display: inline-block;
-                width: 30px; // Adjust the size as needed
-                height: 30px; // Adjust the size as needed
-                background-color: #FFFFFF;
-                border: 2px solid #000000;
-            }
-            input {
-                opacity: 0;
-                width: 0;
-                height: 0;
-            }
-        `,
-        documentTitle: "CustomFileName", // Set a custom file name here
-        scanStyles: false,
-        showModal: true, // Optional: Show a modal while the PDF is being generated
+        } else {
+            img.addEventListener('load', () => {
+                loadedCount++;
+                if (loadedCount === images.length) {
+                    callback(); // All images are loaded
+                }
+            });
+            img.addEventListener('error', () => {
+                loadedCount++;
+                if (loadedCount === images.length) {
+                    callback(); // All images are loaded (some might have failed to load)
+                }
+            });
+        }
     });
 }
+
+function printAllPrintPageDivs() {
+    combineForPrinting();
+    console.log(combinedHTML);
+
+    ensureImagesLoaded(function() {
+        var pageTitle = document.title
+            .replace(/\|/g, '')          // Remove all instances of |
+            .replace(/\s\s+/g, ' ')       // Replace multiple spaces with a single space
+            .trim();
+        
+        html2pdf().from(combinedHTML).set({
+            margin: 1,
+            filename: `${pageTitle}_Build_Guide.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        }).save().then(function() {
+            alert('PDF Generated');
+        });
+    });
+}
+
+    // printJS({
+    //     printable: combinedHTML,
+    //     type: "raw-html",
+    //     style: `
+    //         @page {
+    //             margin: 20mm;
+    //             size: auto;
+    //             @bottom-left {
+    //                 content: "";
+    //             }
+    //              @bottom-right { 
+    //                 content: "";
+    //             }
+    //         }
+    //         body {
+    //             font-family: Arial, sans-serif;
+    //             font-size: 14px;
+    //         }
+    //         .print-page {
+    //             page-break-after: always;
+    //         }
+    //         .complete-graphics-showcase {
+    //             width: 100%;
+    //         }
+
+    //         .tutorial-step-graphic {
+    //             max-width: 100%;
+    //             text-align: center;
+    //         }
+    //         table {
+    //             width: 100%;
+    //             border-collapse: collapse; /* Ensure borders are collapsed */
+    //         }
+    //         th,
+    //         td {
+    //             border: 1px solid black; /* Apply border to table cells */
+    //             padding: 8px; /* Optional: Add some padding for better readability */
+    //         }
+    //         img {
+    //             max-width: 50%;
+    //         }
+    //         .custom-checkbox {
+    //             position: relative;
+    //             display: inline-block;
+    //             width: 30px; // Adjust the size as needed
+    //             height: 30px; // Adjust the size as needed
+    //             background-color: #ffffff;
+    //             border: 2px solid #000000;
+    //         }
+    //         input {
+    //             opacity: 0;
+    //             width: 0;
+    //             height: 0;
+    //         }
+
+    //     `,
+    //     documentTitle: "CustomFileName", // Set a custom file name here
+    //     scanStyles: false,
+    //     showModal: true, // Optional: Show a modal while the PDF is being generated
+    // });
+// }
