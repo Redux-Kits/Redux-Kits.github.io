@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: tutorial
 title: "ACA MinMax"
 categories: 
   - build guide
@@ -9,6 +9,109 @@ tags:
   - amplifier
 difficulty:
   - easy
+bom:
+  graphics: ["MinMax-L-Assembly-Graphic.svg" , "MinMax-R-Assembly-Graphic.svg"]
+  components:
+    - board_reference: ["Q1"]
+      part: "Transistor"
+      generic_part: "transistor"
+      quantity: 2
+      data:
+        model: "2SK170"
+    - board_reference: ["Q2"]
+      part: "Transistor"
+      generic_part: "transistor"
+      quantity: 2
+      data:
+        model: "2SJ74"
+    - board_reference: ["Q3"]
+      part: "Transistor"
+      generic_part: "transistor"
+      quantity: 2
+      data:
+        model: "IRFP9140"
+    - board_reference: ["Q4"]
+      part: "Transistor"
+      generic_part: "transistor"
+      quantity: 2
+      data:
+        model: "IRFP140"
+    - board_reference: ["R1", "R7"]
+      part: "Resistor"
+      generic_part: "resistor"
+      quantity: 4
+      data:
+        value: "1"
+        units: "k"
+        tolerance: "1"
+    - board_reference: ["R2"]
+      part: "Resistor"
+      generic_part: "resistor"
+      quantity: 2
+      data:
+        value: "200"
+        units: "k"
+        tolerance: "1"
+    - board_reference: ["R3"]
+      part: "Resistor"
+      generic_part: "resistor"
+      quantity: 2
+      data:
+        value: "221"
+        units: "k"
+        tolerance: "1"
+    - board_reference: ["R4", "R0"]
+      part: "Resistor"
+      generic_part: "resistor"
+      quantity: 4
+      data:
+        value: "22.1"
+        units: "k"
+        tolerance: "1"
+    - board_reference: ["R5"]
+      part: "Resistor"
+      generic_part: "resistor"
+      quantity: 2
+      data:
+        value: "475"
+        units: ""
+        tolerance: "1"
+    - board_reference: ["R6", "R12", "R13"]
+      part: "Resistor"
+      generic_part: "resistor"
+      quantity: 6
+      data:
+        value: "100"
+        units: ""
+        tolerance: "1"
+    - board_reference: ["R8", "R9"]
+      part: "Resistor"
+      generic_part: "resistor"
+      quantity: 4
+      data:
+        value: ".47"
+        wattage: "3"
+        units: ""
+        tolerance: "1"
+    - board_reference: ["R10"]
+      part: "Resistor"
+      generic_part: "resistor"
+      quantity: 2
+      data:
+        value: ".33"
+        wattage: "3"
+        units: ""
+        tolerance: "1"
+    - board_reference: ["R11"]
+      part: "Resistor"
+      generic_part: "resistor"
+      quantity: 2
+      data:
+        value: "1"
+        wattage: "3"
+        units: ""
+        tolerance: "1"
+    
 ---
 
 # ACA MinMax Build Guide
@@ -16,6 +119,14 @@ difficulty:
 ## Checking Contents
 
 Before the build check off each item on the bill of materials (BOM) to make sure that nothing is missing from the kit. If there are missing parts please [send me a message](https://reduxkits.com/pages/contact)!
+
+{% include board_graphics.html bom=page.bom %}
+
+## END_SECTION ##
+
+## BOM
+
+{% include bom.html bom=page.bom %}
 
 ## General Build Strategy
 

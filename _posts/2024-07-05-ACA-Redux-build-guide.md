@@ -132,7 +132,7 @@ bom:
       data:
         value: "332"
         units: "k"
-        tolerance: "5"
+        tolerance: "1"
     - board_reference: ["R12"]
       part: "Resistor"
       generic_part: "resistor"
@@ -140,7 +140,7 @@ bom:
       data:
         value: "39.2"
         units: "k"
-        tolerance: "5"
+        tolerance: "1"
     - board_reference: ["R15"]
       part: "Resistor"
       generic_part: "resistor"
@@ -148,7 +148,7 @@ bom:
       data:
         value: "2.2"
         units: "k"
-        tolerance: "5"
+        tolerance: "1"
     - board_reference: ["J3", "J4"]
       part: "Screw terminal"
       generic_part: "terminal"

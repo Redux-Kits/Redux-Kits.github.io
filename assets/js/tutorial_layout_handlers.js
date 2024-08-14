@@ -91,7 +91,7 @@ function isEmptyTextNode(node) {
 function onViewSelectDropdownChange() {
     const dropdown = document.getElementById("viewDropdown");
     const selectedValue = dropdown.value;
-    console.log("Selected value:", selectedValue);
+    // console.log("Selected value:", selectedValue);
     const scrollContentDiv = document.querySelector(".post-content");
     const galleryContentDiv = document.querySelector(".gallery-content");
     const printContentDiv = document.querySelector(".print-content");

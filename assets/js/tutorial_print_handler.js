@@ -12,13 +12,10 @@ function generatePrintView(chunks) {
 
         chunk.forEach((node) => {
             node.style.display = "block";
-
             // Wrap images and SVGs in a full-width div
             if (isImageryElement(node)) {
                 const wrapperDiv = document.createElement("div");
                 wrapperDiv.classList.add("image-wrapper-div");
-                // node.style.display = "inline-block";
-
                 wrapperDiv.appendChild(node);
                 if (wrapperDiv.querySelector("p")) {
                     wrapperDiv.querySelectorAll("p").forEach((p) => {
@@ -124,7 +121,7 @@ function combineForPrinting() {
 }
 
 function ensureImagesLoaded(callback) {
-    const images = document.querySelectorAll('img');
+    const images = document.querySelectorAll("img");
     let loadedCount = 0;
 
     if (images.length === 0) {
@@ -138,13 +135,13 @@ function ensureImagesLoaded(callback) {
                 callback(); // All images are loaded
             }
         } else {
-            img.addEventListener('load', () => {
+            img.addEventListener("load", () => {
                 loadedCount++;
                 if (loadedCount === images.length) {
                     callback(); // All images are loaded
                 }
             });
-            img.addEventListener('error', () => {
+            img.addEventListener("error", () => {
                 loadedCount++;
                 if (loadedCount === images.length) {
                     callback(); // All images are loaded (some might have failed to load)
@@ -156,84 +153,26 @@ function ensureImagesLoaded(callback) {
 
 function printAllPrintPageDivs() {
     combineForPrinting();
-    console.log(combinedHTML);
+    // console.log(combinedHTML);
 
-    ensureImagesLoaded(function() {
+    ensureImagesLoaded(function () {
         var pageTitle = document.title
-            .replace(/\|/g, '')          // Remove all instances of |
-            .replace(/\s\s+/g, ' ')       // Replace multiple spaces with a single space
+            .replace(/\|/g, "") // Remove all instances of |
+            .replace(/\s\s+/g, " ") // Replace multiple spaces with a single space
             .trim();
-        
-        html2pdf().from(combinedHTML).set({
-            margin: 1,
-            filename: `${pageTitle}_Build_Guide.pdf`,
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2 },
-            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-        }).save().then(function() {
-            alert('PDF Generated');
-        });
+
+        html2pdf()
+            .from(combinedHTML)
+            .set({
+                margin: 1,
+                filename: `${pageTitle}_Build_Guide.pdf`,
+                image: { type: "jpeg", quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+            })
+            .save()
+            .then(function () {
+                alert("PDF Generated");
+            });
     });
 }
-
-    // printJS({
-    //     printable: combinedHTML,
-    //     type: "raw-html",
-    //     style: `
-    //         @page {
-    //             margin: 20mm;
-    //             size: auto;
-    //             @bottom-left {
-    //                 content: "";
-    //             }
-    //              @bottom-right { 
-    //                 content: "";
-    //             }
-    //         }
-    //         body {
-    //             font-family: Arial, sans-serif;
-    //             font-size: 14px;
-    //         }
-    //         .print-page {
-    //             page-break-after: always;
-    //         }
-    //         .complete-graphics-showcase {
-    //             width: 100%;
-    //         }
-
-    //         .tutorial-step-graphic {
-    //             max-width: 100%;
-    //             text-align: center;
-    //         }
-    //         table {
-    //             width: 100%;
-    //             border-collapse: collapse; /* Ensure borders are collapsed */
-    //         }
-    //         th,
-    //         td {
-    //             border: 1px solid black; /* Apply border to table cells */
-    //             padding: 8px; /* Optional: Add some padding for better readability */
-    //         }
-    //         img {
-    //             max-width: 50%;
-    //         }
-    //         .custom-checkbox {
-    //             position: relative;
-    //             display: inline-block;
-    //             width: 30px; // Adjust the size as needed
-    //             height: 30px; // Adjust the size as needed
-    //             background-color: #ffffff;
-    //             border: 2px solid #000000;
-    //         }
-    //         input {
-    //             opacity: 0;
-    //             width: 0;
-    //             height: 0;
-    //         }
-
-    //     `,
-    //     documentTitle: "CustomFileName", // Set a custom file name here
-    //     scanStyles: false,
-    //     showModal: true, // Optional: Show a modal while the PDF is being generated
-    // });
-// }
