@@ -284,7 +284,6 @@ function getBbox(layer) {
         }
 
         // If no transform or unhandled transform, return the original bbox
-        console.log(bbox);
         return bbox;
     }
     return null;
