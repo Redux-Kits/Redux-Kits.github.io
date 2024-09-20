@@ -54,7 +54,6 @@
     width: 100%;
 }
 
-
 .tutorial-step-graphic,
 .svg-container-div {
     display: flex;
@@ -190,6 +189,18 @@ select:focus {
     }
 }
 
+.tutorial-photo-container {
+    width: 75%;
+    margin: 0 auto;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.tutorial-photo-container img {
+    width: 100%;
+    border-radius: 10px; /* Adds rounded corners to the image */
+}
+
 .gallery-content {
     border: 2px solid $text-color;
     overflow: auto;
@@ -251,17 +262,6 @@ select:focus {
         animation: none;
     }
 
-    // .tutorial-step-graphic {
-    //     text-align: left;
-    // }
-
-    img {
-        max-width: 50%;
-    }
-
-    // div {
-    //     max-width: 50%;
-    // }
 }
 
 .print-page table {

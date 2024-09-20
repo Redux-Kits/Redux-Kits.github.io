@@ -97,7 +97,7 @@ function rotateToCorrectOrientation(svgElement) {
 
 function makeDivWithSVGElement(svgElement, maxDimension = 200) {
     const div = document.createElement("div");
-    div.style.padding = "0";
+    div.style.padding = "0.5rem";
     div.style.margin = "0";
     div.style.overflow = "hidden";
     div.classList.add('generated-div-with-svg-element')
@@ -229,11 +229,13 @@ function findLayer(layers, layerId) {
 //         }
 //         // not behaving the same as transform, which works perfectly
 //         // e.g. <g inkscape:groupmode="layer" id="layer73" inkscape:label="J2" transform="matrix(-1,0,0,1,135.31649,13.471314)" style="display: block;"> (tutorial_SVG_handlers.js, line 432)<g id="g1698" transform="rotate(-26.850264,0.74882559,10.823287)"></g></g>
-//         console.log(bbox);
+//         //console.log(bbox);
 //         return bbox;
 //     }
 //     return null;
 // }
+
+
 
 function getBbox(layer) {
     const bbox = layer.getBBox();
@@ -263,7 +265,7 @@ function getBbox(layer) {
                 const d = parseFloat(matrixMatch[4]); // scale Y or skew Y
                 const e = parseFloat(matrixMatch[5]); // translate X
                 const f = parseFloat(matrixMatch[6]); // translate Y
-                console.log(a, b, c, d, e, f)
+                //console.log(a, b, c, d, e, f)
 
                 // Apply the matrix transformation to the bounding box // stuck here!!!!!
                 // TODO TODO
@@ -485,7 +487,7 @@ function areasToHighlightForCurrentStep(layers, stepReferencesArray, border = 5)
     areas = [];
     for (let id of stepReferencesArray) {
         const layer = findLayer(layers, id);
-        console.log(layer)
+        //console.log(layer)
         if (layer) {
             const layerBBox = getBbox(layer);
             layerBBox.x -= border;
@@ -495,7 +497,7 @@ function areasToHighlightForCurrentStep(layers, stepReferencesArray, border = 5)
             // fix bboxes falling off here
             areas.push(layerBBox);
         } else {
-            console.log("No areas to highlight")
+            //console.log("No areas to highlight")
         }
     }
     return areas;
@@ -638,19 +640,18 @@ function drawStepGraphics(node) {
             const altCount = hideAllAltReferencedLayers(layers);
             const count = showPopulatedLayersAtStep(layers);
             
-            console.log(`SVG: ${debugCounterSVG}\t\t COUNT: ${count} ALT COUNT: ${altCount}\t\t LAYERS: ${stepReferencesArray}`);
+            //console.log(`SVG: ${debugCounterSVG}\t\t COUNT: ${count} ALT COUNT: ${altCount}\t\t LAYERS: ${stepReferencesArray}`);
             if (count > 0) {
                 if (componentOfInterestInSVGElement(svgElement, stepReferencesArray)) {
                     var areas = areasToHighlightForCurrentStep(layers, stepReferencesArray);
-                    console.log('areas', areas)
+                    //console.log('areas', areas)
                     areas = reduceAreas(areas);
                     addHighlightForCurrentStepAreas(areas, svgElement);
                     const div = makeDivWithSVGElement(svgElement, -1);
-
                     node.appendChild(div);
                 }
             } else {
-                console.log('no count')
+                //console.log('no count')
             }
             cleanUpReflows();
             
@@ -724,10 +725,10 @@ function buildStepComponents() {
     const tutorialStepGraphics = document.querySelectorAll(".tutorial-step-graphic");
     let counter = 1
     for (let node of tutorialStepGraphics) {
-        console.log(`Step ${counter}`);
+        //console.log(`Step ${counter}`);
         counter += 1;
         drawStepGraphics(node);
-        console.log(``);
+        //console.log(``);
     }
 }
 

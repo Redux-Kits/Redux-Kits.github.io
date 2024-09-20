@@ -242,7 +242,7 @@ Solder the large resistors.
 
 The large resistors get warm during operation. Some space off the PCB will help airflow. You can use the brass standoff to gauge the space under the large resistors. It helps to solder one leg from this side before flipping the PCB over.
 
-![Large Resistors & Brass Standoff]({{ site.url }}/images/aca-redux-large-resistors-brass-standoff.jpeg)
+{% include hosted_image_for_step.html image_name="aca-redux-large-resistors-brass-standoff.jpeg" alt="Large Resistors & Brass Standoff" %}
 
 ## END_SECTION ##
 
@@ -325,22 +325,22 @@ Screw the 4 brass standoffs into the outermost holes along the heatsink.
 {% include step.html title="Transistor Preparation" bom_references="'Q1', 'Q2'" %}
 The Q1 & Q2 transistor legs need to be bent up by 90 degrees towards the plastic side of the body, right at the point they narrow. Bending can be done with pliers but the leads will naturally bend at the correct point even when done by hand.
 
-![Transistor with bent leads]({{ site.url }}/images/aca-redux-transistor-bent-lead.jpeg)
+{% include hosted_image_for_step.html image_name="aca-redux-transistor-bent-lead.jpeg" alt="Transistor with bent leads" %}
 
 ## END_SECTION ##
 {% include step.html title="Insulating & Securing Transistors" bom_references="'Q1', 'Q2'" %}
 Install the insulator pads to the head sink. Make sure they are clean and free of any metal crumbs or solder blobs.
 
-![Insulator Pads on Heatsink]({{ site.url }}/images/aca-redux-insulator-pads-heatsink.jpeg)
+{% include hosted_image_for_step.html image_name="aca-redux-insulator-pads-heatsink.jpeg" alt="Insulator Pads on Heatsink" %}
 
 Attach the Q1 & Q2 transistors to the heatsink with the screw and washer. It does not matter which side is Q1 or Q2. Do not tighten the screws yet - you will have to adjust the location of the transistors and screws in the next step. 
-![Transistor Install View]({{ site.url }}/images/aca-redux-transistor-install.svg)
+{% include hosted_image_for_step.html image_name="aca-redux-transistor-install.svg" alt="Transistor Install View" %}
 
-![Insulator Pads on Heatsink]({{ site.url }}/images/aca-redux-transistors-heatsink.jpeg)
+{% include hosted_image_for_step.html image_name="aca-redux-transistors-heatsink.jpeg" alt="Insulator Pads on Heatsink" %}
 
 ## END_SECTION ##
 {% include step.html title="Aligning Transistors & Attaching PCB To Heatsink" bom_references="'Q1', 'Q2', 'NSO1', 'NSO2', 'NSO3', 'NSO4'" %}
-Before ading the PCB to the heatsink, make sure:
+Before adding the PCB to the heatsink, make sure:
 
   - the brass standoffs are inserted and secure
   - the large Q1 & Q2 transistors have the insulators aligned nice and square under them
@@ -349,10 +349,50 @@ Before ading the PCB to the heatsink, make sure:
 
 The PCB and the heat sink go together so the flat parts are aligned. Align the 3 legs on Q1 & Q2 with their holes in the PCB.
 
-![Insulator Pads on Heatsink]({{ site.url }}/images/aca-redux-transistor-alignment.jpeg)
+{% include hosted_image_for_step.html image_name="aca-redux-transistor-alignment.jpeg" alt="Insulator Pads on Heatsink" %}
+
+Gentle nudge the PCB to align the mounting holes over the brass standoffs and insert and attach the 4 black 'legs' into the brass standoffs.
+
+{% include hosted_image_for_step.html image_name="aca-redux-side-alignment.jpeg" alt="Alignment Side View" %}
+
+With the PCB secured by all 4 screws, you can now tighten the Q1 & Q2 screws firmly. Do not over tighten. 
+
+Solder Q1 and Q2 to the PCB.
 
 {% include graphics_for_step.html bom_references="'Q1', 'Q2'" %}
 
+## END_SECTION ##
+{% include step.html title="Take a moment" %}
+It looks like a mechanical hedgehog!
+
+{% include hosted_image_for_step.html image_name="aca-redux-mechanical-hedgehog.jpeg" alt="Mechanical Hedgehog" %}
+
+## END_SECTION ##
+{% include step.html title="Set the DC Balance to 12V" bom_references="'Q1', 'P1" %}
+For best results, allow the amp to warm up for about 30 minutes. Connect a DC volt meter to Q1 as indicated by the diagram on the PCB. Make small adjustments to the trim pot P1 as tiny adjustments will have a large impact on the voltage, and the initial change in response to your adjustment will 'bounce' before it settles. Aim for between 11.5V and 12.5V. Be patient. Go slow. Enjoy the process.
+
+{% include graphics_for_step.html bom_references="'Q1', 'P1'" %}
+## END_SECTION ##
+{% include step.html title="Connections & Inputs" bom_references="" %}
+
+| Connector | Board Reference | Cable |
+|---|---|---|
+| Black Barrel Jack | J1 | Power Supply |
+| RCA Jack | J2 | Audio Input |
+| Speaker Posts | J3 & J4  | Speaker Wires |
+
+
+{% include hosted_image_for_step.html image_name="aca-redux-connections.jpeg" alt="Connections" %}
+
+## END_SECTION ##
+
+{% include step.html title="Sign Your Work!" bom_references="" %}
+
+You did it! Congratulations. Remember to sign and date your new amplifier.
+
+{% include hosted_image_for_step.html image_name="aca-redux-6L6.jpeg" alt="Connections" %}
+
+A big thank you to 6L6 for helping create this tutorial. You can view an alternate version over at [diyaudio.com](https://guides.diyaudio.com/Guide/ACA+Redux/22)
 
 <!-- 
 0. finish fixing print
