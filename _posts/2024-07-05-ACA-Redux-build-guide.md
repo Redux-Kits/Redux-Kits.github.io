@@ -373,7 +373,7 @@ For best results, allow the amp to warm up for about 30 minutes. Connect a DC vo
 
 {% include graphics_for_step.html bom_references="'Q1', 'P1'" %}
 ## END_SECTION ##
-{% include step.html title="Connections & Inputs" bom_references="" %}
+{% include step.html title="Connections & Inputs" %}
 
 | Connector | Board Reference | Cable |
 |---|---|---|
@@ -386,7 +386,7 @@ For best results, allow the amp to warm up for about 30 minutes. Connect a DC vo
 
 ## END_SECTION ##
 
-{% include step.html title="Sign Your Work!" bom_references="" %}
+{% include step.html title="Sign Your Work!" %}
 
 You did it! Congratulations. Remember to sign and date your new amplifier.
 
