@@ -209,11 +209,39 @@ function findLayer(layers, layerId) {
     return layer;
 }
 
+// function getBbox(layer) {
+//     const bbox = layer.getBBox();
+//     if (bbox) {
+//         transform = layer.getAttribute("transform");
+//         if (transform) {
+//             const translateMatch = /translate\(\s*([-\d.]+)\s*,\s*([-\d.]+)\s*\)/.exec(transform);
+//             if (translateMatch) {
+//                 // e.g. <g inkscape:groupmode="layer" id="layer73" inkscape:label="J2" transform="translate(-0.30954099,13.471314)" style="display: block;"><g id="g1698" transform="rotate(-26.850264,0.74882559,10.823287)"><rect style="fill:url(#linearGradient1696);fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient1698);stroke-width:0.999995;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1" id="rect1695" width="7.3000002" height="9.5" x="29.669634" y="19.23086"></rect><rect style="fill:#f7f7f7;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1" id="rect1694" width="3" height="10.3" x="28.319635" y="28.239521"></rect><rect style="fill:#f7f7f7;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.01;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" id="rect1694-7" width="3" height="10.3" x="35.319633" y="28.239521"></rect><rect style="fill:#f2f2f2;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.01;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" id="rect1694-7-5" width="4" height="5" x="31.319633" y="29.230858"></rect><path d="m 35.319603,34.100581 -3.999998,-3.7e-5 8.9e-5,2.999768 1.475388,-2.82e-4 0.174336,-0.480528 0.767302,-0.0054 0.193559,0.486057 1.389413,2.14e-4 z" style="fill:#e5e5e5;fill-rule:evenodd;stroke-width:0.00999997" id="path1699"></path></g></g>
+//                 const translateX = parseFloat(translateMatch[1]);
+//                 const translateY = parseFloat(translateMatch[2]);
+//                 return {
+//                     x: bbox.x + translateX,
+//                     y: bbox.y + translateY,
+//                     width: bbox.width,
+//                     height: bbox.height,
+//                 };
+//             }
+//         }
+//         // not behaving the same as transform, which works perfectly
+//         // e.g. <g inkscape:groupmode="layer" id="layer73" inkscape:label="J2" transform="matrix(-1,0,0,1,135.31649,13.471314)" style="display: block;"> (tutorial_SVG_handlers.js, line 432)<g id="g1698" transform="rotate(-26.850264,0.74882559,10.823287)"></g></g>
+//         console.log(bbox);
+//         return bbox;
+//     }
+//     return null;
+// }
+
 function getBbox(layer) {
     const bbox = layer.getBBox();
     if (bbox) {
-        transform = layer.getAttribute("transform");
+        const transform = layer.getAttribute("transform");
+
         if (transform) {
+            // Handle "translate(x, y)" transform
             const translateMatch = /translate\(\s*([-\d.]+)\s*,\s*([-\d.]+)\s*\)/.exec(transform);
             if (translateMatch) {
                 const translateX = parseFloat(translateMatch[1]);
@@ -225,7 +253,36 @@ function getBbox(layer) {
                     height: bbox.height,
                 };
             }
+
+            // Handle "matrix(a, b, c, d, e, f)" transform
+            const matrixMatch = /matrix\(\s*([-\d.]+)\s*,\s*([-\d.]+)\s*,\s*([-\d.]+)\s*,\s*([-\d.]+)\s*,\s*([-\d.]+)\s*,\s*([-\d.]+)\s*\)/.exec(transform);
+            if (matrixMatch) {
+                const a = parseFloat(matrixMatch[1]); // scale X or skew X
+                const b = parseFloat(matrixMatch[2]); // skew Y
+                const c = parseFloat(matrixMatch[3]); // skew X
+                const d = parseFloat(matrixMatch[4]); // scale Y or skew Y
+                const e = parseFloat(matrixMatch[5]); // translate X
+                const f = parseFloat(matrixMatch[6]); // translate Y
+
+                // Apply the matrix transformation to the bounding box
+                const transformedX = bbox.x * a + bbox.y * c + e;
+                const transformedY = bbox.x * b + bbox.y * d + f;
+
+                // Fix negative width and height by taking the absolute value
+                const transformedWidth = Math.abs(bbox.width * a);
+                const transformedHeight = Math.abs(bbox.height * d);
+
+                return {
+                    x: transformedX,
+                    y: transformedY,
+                    width: transformedWidth,
+                    height: transformedHeight,
+                };
+            }
         }
+
+        // If no transform or unhandled transform, return the original bbox
+        console.log(bbox);
         return bbox;
     }
     return null;
@@ -423,10 +480,12 @@ function showPopulatedLayersAtStep(layers) {
     return count;
 }
 
-function areasToHighlightForCurrentStep(layers, stepReferencesArray, svgElement, border = 5) {
+function areasToHighlightForCurrentStep(layers, stepReferencesArray, border = 5) {
     areas = [];
+    console.log("HI")
     for (let id of stepReferencesArray) {
         const layer = findLayer(layers, id);
+        console.log(layer)
         if (layer) {
             const layerBBox = getBbox(layer);
             layerBBox.x -= border;
@@ -435,8 +494,11 @@ function areasToHighlightForCurrentStep(layers, stepReferencesArray, svgElement,
             layerBBox.height += 2 * border;
             // fix bboxes falling off here
             areas.push(layerBBox);
+        } else {
+            console.log("No areas to highlight")
         }
     }
+    console.log("Lo")
     return areas;
 }
 
@@ -560,6 +622,7 @@ function drawStepGraphics(node) {
     let debugCounterSVG = 0;
     if (newComponents) {
         for (let svgString of SVGs) {
+            
             debugCounterSVG += 1;
             const parser = new DOMParser();
             const svgDoc = parser.parseFromString(svgString, "image/svg+xml");
@@ -572,22 +635,26 @@ function drawStepGraphics(node) {
             // Use getElementsByTagNameNS to handle namespaces
             const layers = svgElement.getElementsByTagNameNS("*", "g");
             hideAllReferencedLayers(layers);
+            
             const altCount = hideAllAltReferencedLayers(layers);
             const count = showPopulatedLayersAtStep(layers);
+            
             console.log(`SVG: ${debugCounterSVG}\t\t COUNT: ${count} ALT COUNT: ${altCount}\t\t LAYERS: ${stepReferencesArray}`);
             if (count > 0) {
-                var areas = areasToHighlightForCurrentStep(layers, stepReferencesArray, svgElement);
-                areas = reduceAreas(areas);
-                addHighlightForCurrentStepAreas(areas, svgElement);
-                // addHighlightBeneathLayersForCurrentStep(layers, stepReferencesArray, svgElement);
-                // console.log(stepReferencesArray, tutorialStepVisibleLayers)
                 if (componentOfInterestInSVGElement(svgElement, stepReferencesArray)) {
+                    var areas = areasToHighlightForCurrentStep(layers, stepReferencesArray);
+                    console.log('areas', areas)
+                    areas = reduceAreas(areas);
+                    addHighlightForCurrentStepAreas(areas, svgElement);
                     const div = makeDivWithSVGElement(svgElement, -1);
 
                     node.appendChild(div);
                 }
+            } else {
+                console.log('no count')
             }
             cleanUpReflows();
+            
         }
     }
 }
@@ -656,8 +723,12 @@ function buildStepComponents() {
         step_count++;
     }
     const tutorialStepGraphics = document.querySelectorAll(".tutorial-step-graphic");
+    let counter = 1
     for (let node of tutorialStepGraphics) {
+        console.log(`Step ${counter}`);
+        counter += 1;
         drawStepGraphics(node);
+        console.log(``);
     }
 }
 
