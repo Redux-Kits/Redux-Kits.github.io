@@ -263,9 +263,11 @@ function getBbox(layer) {
                 const d = parseFloat(matrixMatch[4]); // scale Y or skew Y
                 const e = parseFloat(matrixMatch[5]); // translate X
                 const f = parseFloat(matrixMatch[6]); // translate Y
+                console.log(a, b, c, d, e, f)
 
-                // Apply the matrix transformation to the bounding box
-                const transformedX = bbox.x * a + bbox.y * c + e;
+                // Apply the matrix transformation to the bounding box // stuck here!!!!!
+                // TODO TODO
+                const transformedX = bbox.x * a + bbox.y * c + e - Math.abs(bbox.width)/2;
                 const transformedY = bbox.x * b + bbox.y * d + f;
 
                 // Fix negative width and height by taking the absolute value
@@ -482,7 +484,6 @@ function showPopulatedLayersAtStep(layers) {
 
 function areasToHighlightForCurrentStep(layers, stepReferencesArray, border = 5) {
     areas = [];
-    console.log("HI")
     for (let id of stepReferencesArray) {
         const layer = findLayer(layers, id);
         console.log(layer)
@@ -498,7 +499,6 @@ function areasToHighlightForCurrentStep(layers, stepReferencesArray, border = 5)
             console.log("No areas to highlight")
         }
     }
-    console.log("Lo")
     return areas;
 }
 

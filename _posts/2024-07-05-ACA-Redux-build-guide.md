@@ -357,12 +357,12 @@ The PCB and the heat sink go together so the flat parts are aligned. Align the 3
 <!-- 
 0. finish fixing print
 1. Hide board in hover overs in some scenarios (e.g Q1, Q2)
-2. Fix the value / units weirdness in resistors and caps
+2. Fix the value / units weirdness in resistors and caps DONE
 3. orientation flags (rotate deg) as optionals for showing images
 4. Allow to show alt images in blog with a tag / layer name
 
 
-when NEW parts are only on one side, only draw that PCB - that is currently the breaking thing. Can figure that out fo sho
+when NEW parts are only on one side, only draw that PCB - that is currently the breaking thing. Can figure that out fo sho DONE
 BACKLOG:
 - Shopify
  -->
