@@ -42,7 +42,14 @@ data-vector-endpoint-{{forloop.index}}="{{ site.baseurl }}/boardvectors/{{ graph
 
         {{ component_label }}
       </td>
-      <td>{{ component.quantity }}</td>
+      <td>
+        {{ component.quantity }}
+        {% if component.generic_part == 'wire by foot' %}
+        '
+        {% endif %}
+
+
+      </td>
       <td style="text-align: center;">
         <label class="custom-checkbox">
           <input type="checkbox">

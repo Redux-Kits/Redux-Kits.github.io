@@ -575,13 +575,13 @@ function setupTutorialBOMTable() {
             let myString = "";
             switch (component.generic_part) {
                 case "resistor":
-                    myString = `${component.part}, ${component.data.value}${component.data.units}Ω`;
+                    myString = `${component.part}, ${component.data.value}Ω`;
                     if (component.data.tolerance) {
                         myString += `, ${component.data.tolerance}%`;
                     }
                     break;
                 case "capacitor":
-                    myString = `${component.part}, ${component.data.value}${component.data.units}F`;
+                    myString = `${component.part}, ${component.data.value}F`;
                     break;
                 case "transistor":
                     myString = `Transistor, ${component.part}`;
