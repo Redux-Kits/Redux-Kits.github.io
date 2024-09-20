@@ -28,12 +28,12 @@ data-vector-endpoint-{{forloop.index}}="{{ site.baseurl }}/boardvectors/{{ graph
       </td>
       <td>
         {% if component.generic_part == 'resistor' %}
-          {% assign component_label = 'Resistor, ' | append: component.data.value | append: component.data.units | append: 'Ω' %}
+          {% assign component_label = 'Resistor, ' | append: component.data.value | append: 'Ω' %}
           {% if component.data.tolerance %}
             {% assign component_label = component_label | append: ', ' | append: component.data.tolerance | append: '%' %}
           {% endif %}
         {% elsif component.generic_part == 'capacitor' %}
-          {% assign component_label = 'Capacitor, ' | append: component.data.value | append: component.data.units | append: 'F' %}
+          {% assign component_label = 'Capacitor, ' | append: component.data.value | append: 'F' %}
         {% elsif component.generic_part == 'transistor' %}
           {% assign component_label = 'Transistor, ' | append: component.part  %}
         {% else %}

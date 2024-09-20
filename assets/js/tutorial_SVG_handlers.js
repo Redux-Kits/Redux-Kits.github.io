@@ -183,14 +183,17 @@ function hideAllReferencedLayers(layers) {
 }
 
 function hideAllAltReferencedLayers(layers) {
+    let count = 0;
     for (let i = 0; i < layers.length; i++) {
         const currentLabel = layers[i].getAttribute("inkscape:label");
         if (currentLabel) {
             if (currentLabel.includes(" Alt")) {
                 layers[i].style.display = "none";
+                count += 1
             }
         }
     }
+    return count
 }
 
 function findLayer(layers, layerId) {
@@ -364,7 +367,7 @@ function createTooltip(data, reference) {
 
     switch (data.generic_part) {
         case "resistor":
-            dataString += `${data.data.value}${data.data.units}Ω`;
+            dataString += `${data.data.value}Ω`;
             if (data.data.wattage) {
                 dataString += ` - ${data.data.wattage}W`;
             }
@@ -373,7 +376,7 @@ function createTooltip(data, reference) {
             }
             break;
         case "capacitor":
-            dataString += `${data.data.value}${data.data.units}F`;
+            dataString += `${data.data.value}F`;
             break;
         case "transistor":
             dataString += `${data.part}`;
@@ -534,6 +537,18 @@ function setupTutorialBOMTable() {
     });
 }
 
+function componentOfInterestInSVGElement(svgElement, stepReferencesArray) {
+    let res = false;
+    const layers = svgElement.getElementsByTagNameNS("*", "g");
+    for (let layerId of stepReferencesArray) {
+        let layer = findLayer(layers, layerId);
+        if (layer) {
+            res = true;
+        }
+    }
+    return res;
+}
+
 function drawStepGraphics(node) {
     const stepReferencesArray = node
         .getAttribute("data-bom-references")
@@ -542,8 +557,10 @@ function drawStepGraphics(node) {
         .map((str) => str.trim());
     var newComponents = stepReferencesArray.length != 0;
     tutorialStepVisibleLayers = tutorialStepVisibleLayers.concat(stepReferencesArray);
+    let debugCounterSVG = 0;
     if (newComponents) {
         for (let svgString of SVGs) {
+            debugCounterSVG += 1;
             const parser = new DOMParser();
             const svgDoc = parser.parseFromString(svgString, "image/svg+xml");
             const svgElement = svgDoc.documentElement;
@@ -555,15 +572,20 @@ function drawStepGraphics(node) {
             // Use getElementsByTagNameNS to handle namespaces
             const layers = svgElement.getElementsByTagNameNS("*", "g");
             hideAllReferencedLayers(layers);
-            hideAllAltReferencedLayers(layers);
+            const altCount = hideAllAltReferencedLayers(layers);
             const count = showPopulatedLayersAtStep(layers);
+            console.log(`SVG: ${debugCounterSVG}\t\t COUNT: ${count} ALT COUNT: ${altCount}\t\t LAYERS: ${stepReferencesArray}`);
             if (count > 0) {
                 var areas = areasToHighlightForCurrentStep(layers, stepReferencesArray, svgElement);
                 areas = reduceAreas(areas);
                 addHighlightForCurrentStepAreas(areas, svgElement);
                 // addHighlightBeneathLayersForCurrentStep(layers, stepReferencesArray, svgElement);
-                const div = makeDivWithSVGElement(svgElement, -1);
-                node.appendChild(div);
+                // console.log(stepReferencesArray, tutorialStepVisibleLayers)
+                if (componentOfInterestInSVGElement(svgElement, stepReferencesArray)) {
+                    const div = makeDivWithSVGElement(svgElement, -1);
+
+                    node.appendChild(div);
+                }
             }
             cleanUpReflows();
         }
